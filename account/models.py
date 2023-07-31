@@ -1,11 +1,12 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from word.models import Word
 import random
 
 class User(AbstractUser):
-    age = models.IntegerField()
-    nickname = models.CharField(max_length=100, null=True)
-    level = models.CharField(max_length=100,null = True, default="돌멩이")
+    age = models.IntegerField(max_length=3) #나이 제한을 두어야 할까?
+    nickname = models.CharField(max_length=12, null=True)
+    level = models.CharField(max_length=100,null = True, default="")
     point = models.IntegerField(null = True, default = 0)
     image = models.ImageField(upload_to='user',null = True)
 

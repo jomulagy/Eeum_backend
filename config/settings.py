@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     'account',
     'word',
-    'utils',
+    'message',
     "search",
 
     'rest_framework',

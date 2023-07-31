@@ -1,23 +1,53 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from word.models import Word
+import random
 
-# Create your models here.
 class User(AbstractUser):
     age = models.IntegerField(max_length=3) #나이 제한을 두어야 할까?
     nickname = models.CharField(max_length=12, null=True)
     level = models.CharField(max_length=100,null = True, default="")
     point = models.IntegerField(null = True, default = 0)
-    image = models.ImageField(upload_to='uploads/',null = True) #저장 위치를 어디로?
+    image = models.ImageField(upload_to='user',null = True)
 
-class Question(models.Model):
-    content = models.CharField(max_length=500)
-    word = models.OneToOneField(Word,on_delete=models.CASCADE)
-    created_at = models.DateField(auto_now_add=True)
-    views = models.IntegerField()
-    title = models.CharField(max_length=100)
-    type = models.CharField(max_length=100)
+    prefix = ["귀여운","멋있는","세련된","용감한","소심한","까다로운","잘생긴","못생긴","똑똑한","엉뚱한"]
+    subfix = ["원숭이","코끼리","강아지","고양이","거북이","호랑이","햄스터","지렁이","달팽이","토끼","팬더"]
 
+    def set_nickname(self):
+        random_prefix = random.choice(self.prefix)
+        random_subfix = random.choice(self.subfix)
+
+        self.nickname = random_prefix + " " + random_subfix
+        self.save()
+
+    def set_level(self):
+        if self.point >= 100000:
+            self.level = "에메랄드"
+            self.save()
+        elif self.point >= 70000:
+            self.level = "다이아몬드"
+            self.save()
+        elif self.point >= 35000:
+            self.level = "토파즈"
+            self.save()
+        elif self.point >= 15000:
+            self.level = "자수정"
+            self.save()
+        elif self.point >= 7000:
+            self.level = "진주"
+            self.save()
+        elif self.point >= 3000:
+            self.level = "산호"
+            self.save()
+        elif self.point >= 1500:
+            self.level = "청금석"
+            self.save()
+        elif self.point >= 500:
+            self.level = "대리석"
+            self.save()
+        else:
+            self.level = "돌멩이"
+            self.save()
     ### 해결된 질문
     # def get_solved_request(self):
     #     return self.requests.filter(word__isnull=False)

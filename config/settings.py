@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'word',
     'utils',
 
+    'rest_framework',
+
 ]
 
 MIDDLEWARE = [

@@ -4,12 +4,11 @@ from word.models import Word
 
 # Create your models here.
 class User(AbstractUser):
-    requests = models.ManyToManyField("utils.Request",related_name = "users",null = True)
-    age = models.IntegerField(max_length=3, null=False) #나이 제한을 두어야 할까?
-    nickname = models.CharField(max_length=12, null=False)
-    level = models.CharField(max_length=100)
-    point = models.IntegerField()
-    image = models.ImageField(upload_to='uploads/') #저장 위치를 어디로?
+    age = models.IntegerField(max_length=3) #나이 제한을 두어야 할까?
+    nickname = models.CharField(max_length=12, null=True)
+    level = models.CharField(max_length=100,null = True, default="")
+    point = models.IntegerField(null = True, default = 0)
+    image = models.ImageField(upload_to='uploads/',null = True) #저장 위치를 어디로?
 
 class Question(models.Model):
     content = models.CharField(max_length=500)

@@ -2,23 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="299bf044-cb52-4ff1-a0aa-4bd5a845de23" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/account/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/account/migrations/0002_user_requests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/account/migrations/0003_user_age_user_image_user_level_user_nickname_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/account/migrations/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/message/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/account/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/account/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/admin.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/apps.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/migrations/0001_initial.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/migrations/0002_delete_level_message_read_message_user_and_more.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/migrations/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/models.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/tests.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/urls.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/views.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/message/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/message/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

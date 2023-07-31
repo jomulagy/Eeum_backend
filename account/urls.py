@@ -4,5 +4,11 @@ app_name = "account"
 
 urlpatterns = [
     path("kakao/",KaKaoView.as_view(),name = "kakao"),
-    path("kakao/callback/",KaKaoCallBackView.as_view(),name = "kakao-callback")
+    path("kakao/callback/",KaKaoCallBackView.as_view(),name = "kakao-callback"),
+    path("refresh/",RefreshAccessToken.as_view()),
+
+    path("user/",UserInfo.as_view()),
+    path("user/word/",UserWord.as_view()),
+    path("user/edit/",EditList.as_view()),
+
 ]

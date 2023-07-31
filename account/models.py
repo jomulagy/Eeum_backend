@@ -14,7 +14,7 @@ class User(AbstractUser):
 class Question(models.Model):
     content = models.CharField(max_length=500)
     word = models.OneToOneField(Word,on_delete=models.CASCADE)
-    created_at = models.DateField(auto_now_add==True)
+    created_at = models.DateField(auto_now_add=True)
     views = models.IntegerField()
     title = models.CharField(max_length=100)
     type = models.CharField(max_length=100)

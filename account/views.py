@@ -40,7 +40,7 @@ class KaKaoCallBackView(View):
         try:
             user = User.objects.get(username = username)
         except User.DoesNotExist:
-            user = User.objects.create_user(username=username, password=None)
+            user = User.objects.create_user(username=username, password=None,age = age)
 
         # 로그인 처리
         login(request, user)

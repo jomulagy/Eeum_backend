@@ -35,7 +35,7 @@ class KaKaoCallBackView(View):
         user_info = requests.get(kakao_user_api,headers = headers).json()
 
         username = user_info["id"]
-        age = user_info["kakao_account"]["age_range"][:2]
+        age = int(user_info["kakao_account"]["age_range"][:2])
 
         try:
             user = User.objects.get(username = username)
@@ -44,5 +44,5 @@ class KaKaoCallBackView(View):
 
         # 로그인 처리
         login(request, user)
-
+        print(username,age)
         return redirect('/')

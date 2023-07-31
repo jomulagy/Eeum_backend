@@ -3,12 +3,11 @@ from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-
-class Word(models.Model):    
+class Word(models.Model):
     title = models.IntegerField(max_length= 16)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     age = models.IntegerField(max_length = 8)
-    
+
     likes = models.ManyToManyField("account.User",related_name = "like_word",null = True)
 
     def get_likes(self):

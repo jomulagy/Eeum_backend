@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'word',
     'message',
     "search",
-
+    "vocabulary",
     'rest_framework',
     'rest_framework_simplejwt',
 ]

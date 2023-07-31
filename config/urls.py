@@ -9,7 +9,7 @@ urlpatterns = [
     path('word/', include("word.urls")),
     path('message/', include("message.urls")),
     path('search/', include("search.urls")),
-
+    path("vocabulary/",include("vocabulary.urls")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

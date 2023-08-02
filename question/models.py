@@ -3,6 +3,7 @@ from word.models import Word
 from account.models import User
 
 class Question(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.CharField(max_length=500)
     word = models.OneToOneField(Word,on_delete=models.CASCADE)
     created_at = models.DateField(auto_now_add=True)

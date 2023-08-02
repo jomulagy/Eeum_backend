@@ -49,20 +49,19 @@ INSTALLED_APPS = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    ],
 }
 
-JWT_AUTH = {
-    'JWT_SECRET_KEY': SECRET_KEY,
-    'JWT_ALGORITHM': 'HS256',
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7),
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28),
+# JWT 설정
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Access 토큰 유효 기간 설정 (예: 1시간)
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),  # Refresh 토큰 갱신 기간 설정 (예: 1일)
+    'SLIDING_TOKEN_REFRESH_LIFETIME_GRACE_PERIOD': timedelta(days=1),  # Refresh 토큰 갱신 기간 유예 기간 설정
+    'SLIDING_TOKEN_REFRESH_MAX_LIFETIME': timedelta(days=7),  # Refresh 토큰 최대 유효 기간 설정 (예: 7일)
 }
 
 MIDDLEWARE = [

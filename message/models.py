@@ -25,8 +25,8 @@ class Message(models.Model):
         self.content = f"{grade}까지 10포인트 남았습니다."
         self.save()
 
-    def get_point(self):
-        self.content = f"{self.user.nickname} 님 10 포인트 획득하셨습니다!🔥 (현재 포인트 : {self.user.point}포인트)"
+    def get_point(self,point):
+        self.content = f"{self.user.nickname} 님 {point} 포인트 획득하셨습니다!🔥 (현재 포인트 : {self.user.point}포인트)"
         self.save()
 
     def get_answer(self):

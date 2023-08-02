@@ -64,8 +64,3 @@ class WordUpdateView(View):
         
         수정할 단어를 선택해서 변경해서 저장
         """
-        try:
-                    
-
-
-#삭제는 안하나???

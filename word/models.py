@@ -1,10 +1,13 @@
 from django.db import models
 
+class Age(models.Model):
+    value = models.IntegerField()
+
 class Word(models.Model):
     title = models.IntegerField(max_length= 16)
     author = models.ForeignKey("account.User", on_delete=models.CASCADE)
-    age = models.IntegerField(max_length = 8)
-
+    age = models.ManyToManyField(Age)
+    mean = models.CharField(max_length=40)
     likes = models.ManyToManyField("account.User",related_name = "like_word",null = True)
 
     def get_likes(self):
@@ -47,4 +50,5 @@ class Comment(models.Model): #do
 
     def get_likes(self):
         return self.likes.all().count()
+
 

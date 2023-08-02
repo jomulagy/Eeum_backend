@@ -13,15 +13,14 @@ class Word(models.Model):
     def get_likes(self):
         return self.likes.all().count()
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    content = models.TextField(max_length=32)
-    image = models.ImageField(null=True,blank=True,upload_to="" )
-    views= models.IntegerField(max_length=8)
+    created_at = models.DateTimeField(default=timezone.now, blank=True)
+    content = models.TextField(max_length=32, default='')
+    # image = models.ImageField(upload_to="" )
+    views= models.IntegerField(default='0')
 
 
-class Edit(models.Model):
-    title = models.CharField(max_length=10)
+
+class Comment(models.Model): #단어 comment 이게 수정요청이니?
     created_at = models.DateTimeField(auto_now_add=True)
     views= models.IntegerField(max_length=8)
     content = models.TextField(max_length=32)
@@ -33,6 +32,14 @@ class Edit(models.Model):
         return self.likes.all().count()
 
 
+# class Edit(models.Model):
+#     title = models.CharField(max_length=10)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     views= models.IntegerField(max_length=8)
+#     content = models.TextField(max_length=32)
+#     author = models.ForeignKey(User, on_delete=models.CASCADE)
+#     word = models.ForeignKey(Word, on_delete=models.CASCADE)
+#     likes = models.ManyToManyField("account.User",related_name = "like_edit",null = True)
 
 class Comment(models.Model): #do
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,99 +1,78 @@
 from http import HTTPStatus
-from django.shortcuts import render
 from django.views.generic import View
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import JsonResponse
+from rest_framework.decorators import permission_classes, authentication_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.tokens import RefreshToken
 from question.models import *
+from word.models import *
 from question.serializers import *
 
-class UserNotLoggedInException(Exception):
-    pass
+@permission_classes((AllowAny,))
+class QuestionListView(APIView):
 
-def check_user_logged_in(request):
-    if not request.user.is_authenticated:
-        raise UserNotLoggedInException()
+    def post(self, request):
+        """전체 질문/조회"""
+        entity = Question.objects.filter(type = request.data["type"])
+        if request.data["sort"] == "최신":
+            entity = entity.order_by("-created_at")
+        else:
+            entity = entity.order_by("-view")
+        resp = QuestionSerializer(entity, many=True).data
+        return Response(resp)
 
-class QuestionListView(View):
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class QuestionCreateView(APIView):
 
-    def post(self, request:HttpRequest) -> HttpResponse:
-        """질문/조회"""
-        try: 
-            entity = Question.objects.all()
-            return JsonResponse(
-                status= HTTPStatus.OK,
-                data={
-                    "data":{
-                        "Question": serializeQuestion(entity)
-                    },   
-                },
-            )
-        except (KeyError, ValueError):
-            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
-
-class top5QuestionListView(View):
-
-    def post(self, request:HttpRequest) -> HttpResponse:
-        """조회수가 가장 높은 질문 top 4/조회"""
-        try: 
-            entity = Question.objects.order_by('-views')[:5]
-            return JsonResponse(
-                status= HTTPStatus.OK,
-                data={
-                    "data":{
-                        "Question": serializeQuestion(entity)
-                    },   
-                },
-            )
-        except (KeyError, ValueError):
-            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
-        
-class top5QuestionListView(View):
-
-    def post(self, request:HttpRequest) -> HttpResponse:
-        """가장 최근에 올라온 질문 top4/조회"""
-        try: 
-            entity = Question.objects.order_by('-created_at')[:5]
-            return JsonResponse(
-                status= HTTPStatus.OK,
-                data={
-                    "data":{
-                        "Question": serializeQuestion(entity)
-                    },   
-                },
-            )
-        except (KeyError, ValueError):
-            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
-
-class QuestionCreateView(View):
-
-    def post(self, request:HttpRequest) -> HttpResponse:
+    def post(self, request):
         """질문/생성"""
         try:
-            check_user_logged_in(request)
-
+            serializer = QuestionCreateSerializer(data=request.data)
+            if serializer.is_valid():
+                entity = serializer.save()
+                entity.author = request.user
+                if entity.type == "질문":
+                    entity.word = Word.objects.get(id=request.data["word_id"])
+                else:
+                    entity.word = None
+                entity.save()
+                return Response(QuestionSerializer(entity).data)
+            
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
-        except UserNotLoggedInException:
-            return HttpResponse(status=HTTPStatus.UNAUTHORIZED)
-        
-class CommentListView(View):
 
-    def post(self, request:HttpRequest) -> HttpResponse:
-        """댓글/조회"""
+@permission_classes((AllowAny,))   
+class QuestionDetailListView(APIView):
+
+    def post(self, request):
+        """질문 상세"""
         try: 
-            entity = Comment.objects.all()
-            return JsonResponse(
-                status= HTTPStatus.OK,
-                data={
-                    "data":{
-                        "Comment": serializeComment(entity)
-                    },   
-                },
-            )
+            entity = Question.objects.get(id = request.data["question_id"])
+            resp = QuestionDetailSerializer(entity).data
+            return Response(resp)
+
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
-        
-class CommentCreatView(View):
 
-    def post(self, request:HttpRequest) -> HttpResponse:
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])        
+class CommentCreatView(APIView):
+
+    def post(self, request):
         """댓글/생성"""
+        try:
+            serializer = CommentCreateSerializer(data=request.data)
+            if serializer.is_valid():
+                entity = serializer.save()
+                entity.author = request.user
+                entity.question = Question.objects.get(id=request.data["question_id"])
+                entity.save()
+                return Response(CommentSerializer(entity).data)
+            
+        except (KeyError, ValueError):
+            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
 

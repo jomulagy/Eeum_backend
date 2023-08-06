@@ -1,5 +1,6 @@
 from http import HTTPStatus
 from django.views.generic import View
+from django.core import serializers
 from django.http import JsonResponse
 from rest_framework.decorators import permission_classes, authentication_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -104,9 +105,11 @@ class QuestionLikeView(APIView):
             if Question_Likes.objects.filter(user = request.user, question = entity).exists():
                 like = Question_Likes.objects.get(user = request.user, question = entity)
                 like.delete()
+                return JsonResponse({'like': '0'})
             else:
                 like = Question_Likes(user = request.user, question = entity)
                 like.save()
+                return JsonResponse({'like': '1'})
 
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
@@ -121,10 +124,11 @@ class CommentLikeView(APIView):
             if Comment_Likes.objects.filter(user = request.user, comment = entity).exists():
                 like = Comment_Likes.objects.get(user = request.user, comment = entity)
                 like.delete()
+                return JsonResponse({'like': '0'})
             else:
                 like = Comment_Likes(user = request.user, comment = entity)
                 like.save()
-                
+                return JsonResponse({'like': '1'})
+           
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
-

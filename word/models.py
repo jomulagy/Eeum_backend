@@ -3,42 +3,41 @@ from django.db import models
 class Age(models.Model):
     value = models.IntegerField()
 
+
 class Word(models.Model):
-    title = models.IntegerField(max_length= 16)
-    author = models.ForeignKey("account.User", on_delete=models.CASCADE)
+    title = models.CharField(max_length= 16)
+    author = models.ForeignKey("account.User", on_delete=models.CASCADE, null=True)
     age = models.ManyToManyField(Age)
     mean = models.CharField(max_length=40)
-    likes = models.ManyToManyField("account.User",related_name = "like_word",null = True)
-
+    content = models.TextField(max_length=300, default='')
+    image = models.ImageField(upload_to="", null=True)
+    likes = models.ManyToManyField("account.User",related_name = "like_word")
     def get_likes(self):
         return self.likes.all().count()
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    content = models.TextField(max_length=32, default='')
-    # image = models.ImageField(upload_to="" )
-    views= models.IntegerField(default='0')
-
-
-
-class Comment(models.Model): #단어 comment 이게 수정요청이니?
-    created_at = models.DateTimeField(auto_now_add=True)
-    views= models.IntegerField(max_length=8)
-    content = models.TextField(max_length=32)
-    author = models.ForeignKey("account.User", on_delete=models.CASCADE)
-    word = models.ForeignKey(Word, on_delete=models.CASCADE)
-    likes = models.ManyToManyField("account.User",related_name = "like_edit",null = True)
-
-    def get_likes(self):
-        return self.likes.all().count()
+    created_at = models.DateTimeField(auto_now_add = True, blank=True)
+    views= models.IntegerField(default=0)
 
 
 class Edit(models.Model):
-    title = models.CharField(max_length=10)
-    created_at = models.DateTimeField(auto_now_add=True)
-    views= models.IntegerField(max_length=8)
-    content = models.TextField(max_length=32)
-    author = models.ForeignKey("account.User", on_delete=models.CASCADE)
-    word = models.ForeignKey(Word, on_delete=models.CASCADE)
-    likes = models.ManyToManyField("account.User",related_name = "like_comment",null = True)
+    word = models.ForeignKey("word.Word", on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=16)
+    content = models.TextField(max_length=300)
+    author = models.ForeignKey("account.User", on_delete=models.CASCADE, null=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    likes = models.ManyToManyField("account.User", related_name = "like_edit")
+    def get_likes(self):
+        return self.likes.all().count()
+    views= models.IntegerField(default=0)
 
 
+class Comment(models.Model): #단어 comment 이게 수정요청이니?
+    edit = models.ForeignKey("word.Edit", on_delete=models.CASCADE, null=True)
+
+    content = models.TextField(max_length=300)
+
+    author = models.ForeignKey("account.User", on_delete=models.CASCADE, null=True)
+    likes = models.ManyToManyField("account.User",related_name = "like_comment")
+    def get_likes(self):
+        return self.likes.all().count()
+    created_at = models.DateTimeField(auto_now_add=True, blank=True)
+    views= models.IntegerField(default=0)

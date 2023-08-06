@@ -93,3 +93,25 @@ class EditCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model= Edit
         fields= ["title", "content"]
+class CommentSerializer(serializers.ModelSerializer):
+    author = serializers.SerializerMethodField() 
+    created_at = serializers.SerializerMethodField() 
+    likes = serializers.SerializerMethodField() 
+
+    class Meta:
+        model= Comment
+        fields= ["content","author","created_at","likes","views"]
+    
+    def get_author(self, obj):
+        return AuthorSerializer(obj.author).data
+    def get_created_at(self, obj):
+        return obj.created_at.strftime("%Y/%m/%d %H:%M")
+    def get_likes(self, obj):
+        return obj.get_likes()
+
+
+class CommentCreateSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model= Comment
+        fields=["content"]

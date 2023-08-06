@@ -56,3 +56,36 @@ class WordSerializer(serializers.ModelSerializer):
 
 
 class AuthorSerializer(serializers.ModelSerializer):
+    image= serializers.SerializerMethodField()
+
+    class Meta:
+        model= User
+        fields = ["nickname", "image"]
+
+    def get_image(self, obj):
+        return settings.HOST + obj.image.url
+
+
+class EditSerializer(serializers.ModelSerializer):
+    author= serializers.SerializerMethodField()
+    created_at = serializers.SerializerMethodField()
+    comment_count = serializers.SerializerMethodField()
+    comment = serializers.SerializerMethodField()
+    likes = serializers.SerializerMethodField() 
+
+    class Meta:
+        model= Edit
+        fields= ["title", "content","views", "author", "created_at", "comment_count", "comment", "likes"]
+    
+    def get_author(self,obj): #프로필 사진, 닉네임
+        return AuthorSerializer(obj.author).data
+    def get_created_at(self,obj):
+        return obj.created_at.strftime("%Y/%m/%d %H:%M")
+    def get_comment_count(self,obj):
+        return obj.comment_set.all().count()
+    def get_comment(self, obj):
+        return CommentSerializer(obj.comment_set.all(), many=True).data
+    def get_likes(self, obj):
+        return obj.get_likes()
+
+

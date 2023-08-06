@@ -7,5 +7,6 @@ urlpatterns = [
     path('questioncreate/', QuestionCreateView.as_view()),
     path('detail/', QuestionDetailListView.as_view()),
     path('commentcreate/', CommentCreatView.as_view()),
-
+    path('questionlike/', QuestionLikeView.as_view()),
+    path('commentlike/', CommentLikeView.as_view()),
 ]

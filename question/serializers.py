@@ -44,15 +44,19 @@ class QuestionCreateSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SerializerMethodField()
     created_at = serializers.SerializerMethodField()
+    likes = serializers.SerializerMethodField()
     class Meta:
         model = Question
-        fields = ["created_at", "author", "content"]
+        fields = ["created_at", "author", "content", "likes"]
     
     def get_author(self,obj):
         return AuthorSerializer(obj.author).data
     
     def get_created_at(self, obj):
         return obj.created_at.strftime("%Y/%m/%d %H:%M")
+    
+    def get_likes(self, obj):
+        return obj.comment_likes_set.all().count()
 
 class AgeSerializer(serializers.ModelSerializer):
     class Meta:

@@ -364,4 +364,136 @@ class EditDeleteView(APIView):
             return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
         
         수정할 단어를 선택해서 변경해서 저장
-        """
+        """    def post(self, request):
+        comment_id = request.data["comment_id"]
+        comment= Comment.objects.get(id=comment_id)
+
+        if Comment.objects.filter(id=comment_id, likes=request.user).exists():
+            comment.likes.remove(request.user)
+            comment.save()
+        else:
+            comment.likes.add(request.user)
+            comment.save()
+        return Response(comment.likes.all().count())
+
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class CommentCreateView(APIView):
+    "comment/create/"
+    ##Body에 edit_id 넣어야해
+
+    def post(self, request): ##body에 edit_id 받아야돼
+        """Comment(수정요청 답글) /생성create"""
+        serializer= CommentCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            edit_id= request.data["edit_id"]   # edit.word.add(word) #pk가 word_id인 class word 가져와
+            edit= Edit.objects.get(pk=edit_id)
+            comment =serializer.save()
+            comment.edit= edit
+            comment.author= request.user
+            comment.save()
+
+            return JsonResponse(
+                status= HTTPStatus.OK,
+                data={
+                    "data":{
+                        "edit": CommentSerializer(comment).data
+                    }
+                }
+            )
+        return JsonResponse(
+            status=HTTPStatus.BAD_REQUEST,
+            data={
+                "message": "유효하지 않은 형식입니다.",
+            }
+        )
+    
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class CommentDetaileView(APIView):
+    "comment/detail/"
+    ##Body에 edit_id 넣어야해
+    def post(self, request):
+        """답글 / 상세"""
+        try: 
+            comment_id = request.data["comment_id"]
+            comment = Comment.objects.get(pk= comment_id)
+            comment.views += 1
+            comment.save()
+
+            print(comment)
+
+            return JsonResponse(
+                status= HTTPStatus.OK,
+                data={
+                    "data":{
+                        "comment": CommentSerializer(comment).data   
+                    },
+                },
+            )
+        except (KeyError, ValueError):
+                return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+
+
+
+
+
+
+
+#수정
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class CommentUpdateView(APIView):
+    "comment/<int:comment_id>/update/" 
+    def put(self, request, **kwargs):
+        """Comment(답글) /수정"""
+        try: 
+            comment_id = kwargs["comment_id"]
+            comment = get_object_or_404(Comment, pk=comment_id)
+
+            if comment.author == request.user :
+                comment.content = request.data.get('content', comment.content)
+                comment.save()
+
+                return JsonResponse(
+                    status=HTTPStatus.OK,
+                    data={
+                        "data":{
+                            "word": CommentSerializer(comment).data
+                        },
+                        "message": "답글이 수정되었습니다.",
+                    },   
+                )
+        except :
+            return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
+        
+
+
+# 삭제
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class CommentDeleteView(APIView): 
+    "comment/delete/"
+
+    def post(self, request):
+        """답글 / 삭제"""
+        try:
+            comment_id=request.data["comment_id"]
+            comment= Comment.objects.get(pk=comment_id)
+            if comment.author == request.user:
+                comment.delete()            
+                return JsonResponse(
+                    status= HTTPStatus.OK,
+                    data={
+                        "data":{
+                            "message": "답글이 삭제되었습니다.",
+                        },   
+                    },
+                )
+        except (KeyError, ValueError):
+            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+        except :
+            return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
+        

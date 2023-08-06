@@ -26,4 +26,7 @@ urlpatterns = [
     path('comment/<int:comment_id>/update/', csrf_exempt(CommentUpdateView.as_view())),
     path('comment/delete/', csrf_exempt(CommentDeleteView.as_view())),
 
+    path('like/', csrf_exempt(WordLikesView.as_view())),
+    path('edit/like/', csrf_exempt(EditLikesView.as_view())),
+    path('comment/like/', csrf_exempt(CommentLikesView.as_view())),
 ]

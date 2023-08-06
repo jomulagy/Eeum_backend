@@ -183,30 +183,185 @@ class WordUpdateView(APIView): #UpdateAPIView
         except :
             return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
         
-        serializers = WordSerializer(data=request.data)
-        if serializers.is_valid():
-            word = serializers.save()
+
+
+
+
+
+
+
+
+class EditLikesView(APIView):
+    def post(self, request):
+        edit_id = request.data["edit_id"]
+        edit= Edit.objects.get(id=edit_id)
+
+        if Edit.objects.filter(id=edit_id, likes=request.user).exists():
+            edit.likes.remove(request.user)
+            edit.save()
+        else:
+            edit.likes.add(request.user)
+            edit.save()
+        return Response(edit.likes.all().count())
+
+
+@permission_classes((AllowAny,))
+class EditMostView(APIView):
+    "edit/most_views/"
+    
+    def get(self, request:HttpRequest) -> HttpResponse:
+        """edit/조회수 조회
+        
+        조회수 많은 순
+        """ 
+
+        try: 
+            edits = Edit.objects.all().order_by('-views')
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
                     "data":{
-                        "word":WordSerializer(request)
+                        "word": EditSerializer(edits, many=True).data
+                    },   
+                },
+            )
+        except (KeyError, ValueError):
+            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+
+@permission_classes((AllowAny,))
+class EditRecentView(APIView):
+    "edit/recent/"
+    
+    def get(self, request:HttpRequest) -> HttpResponse:
+        """edit/기간별 조회
+        
+        최근 등록된 순
+        """ 
+        try: 
+            edits = Edit.objects.all().order_by('-created_at')
+            return JsonResponse(
+                status= HTTPStatus.OK,
+                data={
+                    "data":{
+                        "edit": EditSerializer(edits, many=True).data
+                    },   
+                },
+            )
+        except (KeyError, ValueError):
+            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+
+@permission_classes((AllowAny,))
+class EditDetailView(APIView): 
+    "edit/detail/"
+
+    def post(self, request):
+        """수정요청 / 상세"""
+        try:
+            edit_id=request.data["edit_id"]
+            edit= Edit.objects.get(pk=edit_id)
+            edit.views+=1 # 조회수 증가
+            edit.save()
+            print(edit)
+            
+            return JsonResponse(
+                status= HTTPStatus.OK,
+                data={
+                    "data":{
+                        "edit": EditSerializer(edit).data
+                    },   
+                },
+            )
+        except (KeyError, ValueError):
+            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+        
+
+
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class EditCreateView(APIView):
+    "/edit/create/"
+
+    def post(self, request):
+        """Edit(수정요청) /생성"""
+        serializer= EditCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            word_id= request.data["word_id"]   # edit.word.add(word) #pk가 word_id인 class word 가져와
+            word= Word.objects.get(pk=word_id)
+            edit= serializer.save()
+            edit.word = word
+            edit.author = request.user
+            edit.save()
+
+            return JsonResponse(
+                status= HTTPStatus.OK,
+                data={
+                    "data":{
+                        "edit": EditSerializer(edit).data
                     }
                 }
             )
         return JsonResponse(
-            status=HTTPStatus.BAD_REQUEST, #유효하지 않은 값
+            status=HTTPStatus.BAD_REQUEST,
             data={
-                "message": "유효하지않은 형식입니다."
+                "message": "유효하지 않은 형식입니다.",
             }
         )
 
 
-class WordUpdateView(View):
-    "/update"
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class EditUpdateView(APIView):
+    "edit/<int:edit_id>/update/" 
+    def put(self, request, **kwargs):
+        """Edit(수정요청) /수정"""
+        try: 
+            edit_id = kwargs["edit_id"]
+            edit = get_object_or_404(Edit, pk=edit_id)
 
-    def patch(self, request:HttpRequest) -> HttpResponse:
-        """단어/수정
+            if edit.author == request.user :
+                edit.title = request.data.get('title', edit.title)
+                edit.content = request.data.get('content', edit.content)
+                edit.save()
+
+                return JsonResponse(
+                    status=HTTPStatus.OK,
+                    data={
+                        "data":{
+                            "word": EditSerializer(edit).data
+                        },
+                        "message": "수정요청이 수정되었습니다.",
+                    },   
+                )
+        except :
+            return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
+        
+
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class EditDeleteView(APIView): 
+    "edit/delete/"
+
+    def post(self, request):
+        """수정요청 / 삭제"""
+        try:
+            edit_id=request.data["edit_id"]
+            edit= Edit.objects.get(pk=edit_id)
+            if edit.author == request.user:
+                edit.delete()            
+                return JsonResponse(
+                    status= HTTPStatus.OK,
+                    data={
+                        "data":{
+                            "message": "수정요청이 삭제되었습니다.",
+                        },   
+                    },
+                )
+        except (KeyError, ValueError):
+            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+        except :
+            return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
         
         수정할 단어를 선택해서 변경해서 저장
         """

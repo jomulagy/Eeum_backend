@@ -9,7 +9,7 @@ class AuthorSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ["nickname", "image"]
+        fields = ["id","nickname", "image"]
     
     def get_image(self, obj):
         return getattr(settings,"HOST")+obj.image.url
@@ -22,7 +22,7 @@ class QuestionSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
     class Meta:
         model = Question
-        fields = ["author", "created_at", "views", "answers", "title", "content", "likes"]
+        fields = ["id","author", "created_at", "views", "answers", "title", "content", "likes"]
     
     def get_author(self,obj): #obj: 
         return AuthorSerializer(obj.author).data
@@ -69,7 +69,7 @@ class WordSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
     class Meta:
         model = Word
-        fields = ["title", "content", "age", "likes"]
+        fields = ["id","title", "content", "age", "likes"]
     
     def get_age(self,obj):
         ages = AgeSerializer(obj.age.all(), many=True).data
@@ -84,7 +84,7 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
     comments = serializers.SerializerMethodField()
     class Meta:
         model = Question
-        fields = ["question", "word", "comments"]
+        fields = ["id","question", "word", "comments"]
     
     def get_question(self,obj):
         return QuestionSerializer(obj).data
@@ -98,4 +98,4 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
 class CommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ["content"]
+        fields = ["id","content"]

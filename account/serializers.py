@@ -1,12 +1,22 @@
 from rest_framework import serializers
+from django.conf import settings
 
 from word.models import Edit
 from .models import User
 
+class UserCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["age","nickname","level"]
+
 class UserSerializer(serializers.ModelSerializer):
+    image = serializers.SerializerMethodField()
     class Meta:
         model = User
         fields = ["age","nickname","image","level"]
+
+    def get_image(self,obj):
+        return settings.HOST + obj.image.url
 
 class EditEasySerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()

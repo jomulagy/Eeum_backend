@@ -5,9 +5,6 @@ class Message(models.Model):
     read = models.BooleanField(default=False)
     user = models.ForeignKey("account.User",on_delete=models.CASCADE, related_name="messages")
     created_at = models.DateTimeField(auto_now_add=True)
-    def create_edit(self, word):
-        self.content = f"{word}에 대한 수정 요청이 등록되었습니다."
-        self.save()
 
     def create_answer(self, question):
         self.content = f"{question}에 대한 답변이 등록되었습니다."
@@ -21,6 +18,10 @@ class Message(models.Model):
         self.content = f"{word}에 대한 수정 요청이 등록되었습니다."
         self.save()
 
+    def get_question(self, word):
+        self.content = f"{word}에 대한 질문이 등록되었습니다."
+        self.save()
+
     def grade_imminent(self, grade):
         self.content = f"{grade}까지 10포인트 남았습니다."
         self.save()
@@ -31,4 +32,8 @@ class Message(models.Model):
 
     def get_answer(self):
         self.content = f"“나도 궁금해요” 표시한 게시글에 답변이 등록되었습니다"
+        self.save()
+
+    def create_word(self,word):
+        self.content = f"“등록요청한 단어 {word}가 등록되었습니다."
         self.save()

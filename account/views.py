@@ -12,14 +12,14 @@ from .models import User
 
 import requests
 
-from .serializers import UserSerializer, EditEasySerializer
+from .serializers import UserSerializer, EditEasySerializer, UserCreateSerializer
 from search.serializers import WordSerializer
 
 @permission_classes((AllowAny,))
 class KaKaoView(View):
     def get(self, request):
         kakao_api = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="
-        redirect_uri = "http://127.0.0.1:8000/account/kakao/callback/"
+        redirect_uri = "http://3.34.3.84/account/kakao/account/kakao/callback/"
         client_id = "86a527ceaedd9951ed011a5f0011bb5d"
 
         return redirect(f"{kakao_api}{client_id}&redirect_uri={redirect_uri}")
@@ -30,7 +30,7 @@ class KaKaoCallBackView(APIView):
         data = {
             "grant_type": "authorization_code",
             "client_id": "86a527ceaedd9951ed011a5f0011bb5d",
-            "redirect_uri" : "http://127.0.0.1:8000/account/kakao/callback/",
+            "redirect_uri" : "http://3.34.3.84/account/kakao/account/kakao/callback/",
             "code" : request.GET["code"]
         }
 
@@ -86,10 +86,13 @@ class UserInfo(APIView):
         return Response(serializer.data)
 
     def put(self,request):
-        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        serializer = UserCreateSerializer(request.user, data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
+            user = serializer.save()
+            user.image = request.FILES.get("image")
+            user.save()
+            resp = UserSerializer(request.user).data
+            return Response(resp, status=200)
         return Response(serializer.errors, status=400)
 
 @permission_classes((IsAuthenticated,))

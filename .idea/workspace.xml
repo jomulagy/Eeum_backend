@@ -3,13 +3,13 @@
   <component name="ChangeListManager">
     <list default="true" id="299bf044-cb52-4ff1-a0aa-4bd5a845de23" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/account/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/account/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/account/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/message/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/message/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/search/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/search/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vocabulary/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/vocabulary/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vocabulary/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/vocabulary/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vocabulary/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/vocabulary/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/question/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/question/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/question/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/question/views.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/word/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/word/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/word/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/word/serializers.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/word/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/word/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,7 +47,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../OKDK_APP_Backend" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">

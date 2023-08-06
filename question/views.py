@@ -9,6 +9,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from question.models import *
 from word.models import *
+from message.models import Message
 from question.serializers import *
 
 @permission_classes((AllowAny,))
@@ -36,10 +37,15 @@ class QuestionCreateView(APIView):
                 entity = serializer.save()
                 entity.author = request.user
                 if entity.type == "질문":
-                    entity.word = Word.objects.get(id=request.data["word_id"])
+                    word = Word.objects.get(id=request.data["word_id"])
+                    entity.word = word
+                    message = Message(user = word.author)
+                    message.get_question(word.title)
+                    message.save()
                 else:
                     entity.word = None
                 entity.save()
+
                 return Response(QuestionSerializer(entity).data)
             
         except (KeyError, ValueError):
@@ -69,8 +75,20 @@ class CommentCreatView(APIView):
             if serializer.is_valid():
                 entity = serializer.save()
                 entity.author = request.user
-                entity.question = Question.objects.get(id=request.data["question_id"])
+                question = Question.objects.get(id=request.data["question_id"])
+                entity.question = question
                 entity.save()
+                request.user.set_point(25)
+
+                message = Message(user = question.author)
+                message.create_answer(question.title)
+                message.save()
+
+                likes = Question_Likes.objects.filter(question = question)
+                for like in likes:
+                    message = Message(user = like.user)
+                    message.get_answer(question.title)
+                    message.save()
                 return Response(CommentSerializer(entity).data)
             
         except (KeyError, ValueError):

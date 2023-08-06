@@ -1,7 +1,7 @@
 from http import HTTPStatus
 from django.shortcuts import render
 from django.http import HttpRequest, HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404 
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 
 from rest_framework.views import APIView
@@ -9,6 +9,8 @@ from rest_framework.views import APIView
 from word.models import *
 
 from word.serializers import *
+from message.models import Message
+from question.models import Question, Question_Likes
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 
 from rest_framework.decorators import permission_classes, authentication_classes
@@ -41,15 +43,15 @@ class WordAllView(APIView):
     "all/"
 
     def get(self, request:HttpRequest) -> HttpResponse:
-        """단어/전체 조회""" 
-        try: 
+        """단어/전체 조회"""
+        try:
             entity = Word.objects.all()
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
                     "data":{
-                        "word": WordSerializer(entity, many=True).data
-                    },   
+                        "word": WordEasySerializer(entity, many=True).data
+                    },
                 },
             )
         except (KeyError, ValueError):
@@ -58,44 +60,38 @@ class WordAllView(APIView):
 @permission_classes((AllowAny,))
 class WordMostView(APIView):
     "most_views/"
-    
+
     def get(self, request:HttpRequest) -> HttpResponse:
         """단어/조회수 조회
         
         조회수 많은 순
-        """ 
+        """
                 # for age in request.POST.getlist("age"):
                 #     word.age.add(Age.objects.get(value=int(age)))
-        try: 
+        try:
             words = Word.objects.order_by('-views')
-            return JsonResponse(
-                status= HTTPStatus.OK,
-                data={
-                    "data":{
-                        "word": WordSerializer(words, many=True).data
-                    },   
-                },
-            )
+            return Response({
+                        "data": WordEasySerializer(words, many=True).data
+                    })
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
 
 @permission_classes((AllowAny,))
 class WordRecentView(APIView):
     "recent/"
-    
+
     def get(self, request:HttpRequest) -> HttpResponse:
         """단어/기간별 조회
         
         최근 등록된 순
-        """ 
-        try: 
+        """
+        try:
             words = Word.objects.order_by('-created_at')
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
-                    "data":{
-                        "word": WordSerializer(words, many=True).data
-                    },   
+                    "data":WordEasySerializer(words, many=True).data
+
                 },
             )
         except (KeyError, ValueError):
@@ -122,9 +118,16 @@ class WordDetailView(APIView):
 @authentication_classes([JWTAuthentication])
 class WordCreateView(APIView):
     "/create"
-    
+
     def post(self, request):
         """단어/ 생성"""
+        if Word.objects.filter(title = request.POST.get("title")).exists():
+            return JsonResponse(
+                status=HTTPStatus.BAD_REQUEST,
+                data={
+                    "message": "이미 존재하는 단어 입니다.",
+                }
+            )
         serializer = WordCreateSerializer(data=request.POST)
         if serializer.is_valid():
             word = serializer.save()
@@ -134,6 +137,18 @@ class WordCreateView(APIView):
             word.image = request.FILES["image"]
             print(request.FILES)
             word.save()
+            request.user.set_point(50)
+            if Question.objects.filter(type = "등록요청",title = word.title).exists():
+                question = Question.objects.get(type = "등록요청",title = word.title)
+                question.word = word
+                question.save()
+                message = Message(user = question.author)
+                message.create_word(word.title)
+                message.save()
+                for like in Question_Likes.objects.filter(question = question):
+                    message = Message(user = like.author)
+                    message.create_word(word.title)
+                    message.save()
 
             return JsonResponse(
                 status=HTTPStatus.OK,
@@ -156,10 +171,10 @@ class WordCreateView(APIView):
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])
 class WordUpdateView(APIView): #UpdateAPIView
-    "/update/<int:word_id>" 
+    "/update/<int:word_id>"
     def put(self, request, **kwargs):
         """단어/수정"""
-        try: 
+        try:
             word_id = kwargs["word_id"]
             word = get_object_or_404(Word, pk=word_id)
             if word.author == request.user:
@@ -170,6 +185,7 @@ class WordUpdateView(APIView): #UpdateAPIView
                 word.content = request.POST.get('content', word.content)
                 word.image = request.FILES["image"]
                 word.save()
+                request.user.set_point(50)
 
                 return JsonResponse(
                     status=HTTPStatus.OK,
@@ -178,11 +194,11 @@ class WordUpdateView(APIView): #UpdateAPIView
                             "word": WordSerializer(word).data
                         },
                         "message": "단어가 수정되었습니다.",
-                    },   
+                    },
                 )
         except :
             return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
-        
+
 
 
 
@@ -208,21 +224,21 @@ class EditLikesView(APIView):
 @permission_classes((AllowAny,))
 class EditMostView(APIView):
     "edit/most_views/"
-    
+
     def get(self, request:HttpRequest) -> HttpResponse:
         """edit/조회수 조회
         
         조회수 많은 순
-        """ 
+        """
 
-        try: 
+        try:
             edits = Edit.objects.all().order_by('-views')
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
                     "data":{
                         "word": EditSerializer(edits, many=True).data
-                    },   
+                    },
                 },
             )
         except (KeyError, ValueError):
@@ -231,27 +247,27 @@ class EditMostView(APIView):
 @permission_classes((AllowAny,))
 class EditRecentView(APIView):
     "edit/recent/"
-    
+
     def get(self, request:HttpRequest) -> HttpResponse:
         """edit/기간별 조회
         
         최근 등록된 순
-        """ 
-        try: 
+        """
+        try:
             edits = Edit.objects.all().order_by('-created_at')
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
                     "data":{
                         "edit": EditSerializer(edits, many=True).data
-                    },   
+                    },
                 },
             )
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
 
 @permission_classes((AllowAny,))
-class EditDetailView(APIView): 
+class EditDetailView(APIView):
     "edit/detail/"
 
     def post(self, request):
@@ -262,18 +278,18 @@ class EditDetailView(APIView):
             edit.views+=1 # 조회수 증가
             edit.save()
             print(edit)
-            
+
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
                     "data":{
                         "edit": EditSerializer(edit).data
-                    },   
+                    },
                 },
             )
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
-        
+
 
 
 
@@ -292,7 +308,9 @@ class EditCreateView(APIView):
             edit.word = word
             edit.author = request.user
             edit.save()
-
+            message = Message(user = word.author)
+            message.get_edit(word.title)
+            message.save()
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
@@ -312,10 +330,10 @@ class EditCreateView(APIView):
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])
 class EditUpdateView(APIView):
-    "edit/<int:edit_id>/update/" 
+    "edit/<int:edit_id>/update/"
     def put(self, request, **kwargs):
         """Edit(수정요청) /수정"""
-        try: 
+        try:
             edit_id = kwargs["edit_id"]
             edit = get_object_or_404(Edit, pk=edit_id)
 
@@ -323,6 +341,7 @@ class EditUpdateView(APIView):
                 edit.title = request.data.get('title', edit.title)
                 edit.content = request.data.get('content', edit.content)
                 edit.save()
+                request.user.set_point(5)
 
                 return JsonResponse(
                     status=HTTPStatus.OK,
@@ -331,16 +350,16 @@ class EditUpdateView(APIView):
                             "word": EditSerializer(edit).data
                         },
                         "message": "수정요청이 수정되었습니다.",
-                    },   
+                    },
                 )
         except :
             return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
-        
+
 
 
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])
-class EditDeleteView(APIView): 
+class EditDeleteView(APIView):
     "edit/delete/"
 
     def post(self, request):
@@ -349,20 +368,20 @@ class EditDeleteView(APIView):
             edit_id=request.data["edit_id"]
             edit= Edit.objects.get(pk=edit_id)
             if edit.author == request.user:
-                edit.delete()            
+                edit.delete()
                 return JsonResponse(
                     status= HTTPStatus.OK,
                     data={
                         "data":{
                             "message": "수정요청이 삭제되었습니다.",
-                        },   
+                        },
                     },
                 )
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
         except :
             return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
-        
+
 
 class CommentLikesView(APIView):
     def post(self, request):
@@ -394,7 +413,14 @@ class CommentCreateView(APIView):
             comment.edit= edit
             comment.author= request.user
             comment.save()
-
+            message = Message(user = edit.author)
+            message.create_answer(edit.title)
+            message.save()
+            likes = edit.likes.objects.all()
+            for like in likes:
+                message = Message(user=like.user)
+                message.get_answer(edit.title)
+                message.save()
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
@@ -409,7 +435,7 @@ class CommentCreateView(APIView):
                 "message": "유효하지 않은 형식입니다.",
             }
         )
-    
+
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])
 class CommentDetaileView(APIView):
@@ -417,7 +443,7 @@ class CommentDetaileView(APIView):
     ##Body에 edit_id 넣어야해
     def post(self, request):
         """답글 / 상세"""
-        try: 
+        try:
             comment_id = request.data["comment_id"]
             comment = Comment.objects.get(pk= comment_id)
             comment.views += 1
@@ -429,7 +455,7 @@ class CommentDetaileView(APIView):
                 status= HTTPStatus.OK,
                 data={
                     "data":{
-                        "comment": CommentSerializer(comment).data   
+                        "comment": CommentSerializer(comment).data
                     },
                 },
             )
@@ -447,10 +473,10 @@ class CommentDetaileView(APIView):
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])
 class CommentUpdateView(APIView):
-    "comment/<int:comment_id>/update/" 
+    "comment/<int:comment_id>/update/"
     def put(self, request, **kwargs):
         """Comment(답글) /수정"""
-        try: 
+        try:
             comment_id = kwargs["comment_id"]
             comment = get_object_or_404(Comment, pk=comment_id)
 
@@ -465,17 +491,17 @@ class CommentUpdateView(APIView):
                             "word": CommentSerializer(comment).data
                         },
                         "message": "답글이 수정되었습니다.",
-                    },   
+                    },
                 )
         except :
             return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
-        
+
 
 
 # 삭제
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])
-class CommentDeleteView(APIView): 
+class CommentDeleteView(APIView):
     "comment/delete/"
 
     def post(self, request):
@@ -484,17 +510,16 @@ class CommentDeleteView(APIView):
             comment_id=request.data["comment_id"]
             comment= Comment.objects.get(pk=comment_id)
             if comment.author == request.user:
-                comment.delete()            
+                comment.delete()
                 return JsonResponse(
                     status= HTTPStatus.OK,
                     data={
                         "data":{
                             "message": "답글이 삭제되었습니다.",
-                        },   
+                        },
                     },
                 )
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
         except :
             return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
-        

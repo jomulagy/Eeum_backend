@@ -16,11 +16,12 @@ class Word(models.Model):
         return self.likes.all().count()
     created_at = models.DateTimeField(auto_now_add = True, blank=True)
     views= models.IntegerField(default=0)
+    best = models.BooleanField(default=False)
 
 
 class Edit(models.Model):
     word = models.ForeignKey("word.Word", on_delete=models.CASCADE, null=True)
-    title = models.CharField(max_length=16)
+    title = models.CharField(max_length=100)
     content = models.TextField(max_length=300)
     author = models.ForeignKey("account.User", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)

@@ -89,3 +89,7 @@ class EditSerializer(serializers.ModelSerializer):
         return obj.get_likes()
 
 
+class EditCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model= Edit
+        fields= ["title", "content"]

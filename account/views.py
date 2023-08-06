@@ -19,7 +19,7 @@ from search.serializers import WordSerializer
 class KaKaoView(View):
     def get(self, request):
         kakao_api = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="
-        redirect_uri = "http://3.34.3.84/account/kakao/account/kakao/callback/"
+        redirect_uri = "http://3.34.3.84/account/kakao/callback/"
         client_id = "86a527ceaedd9951ed011a5f0011bb5d"
 
         return redirect(f"{kakao_api}{client_id}&redirect_uri={redirect_uri}")
@@ -30,7 +30,7 @@ class KaKaoCallBackView(APIView):
         data = {
             "grant_type": "authorization_code",
             "client_id": "86a527ceaedd9951ed011a5f0011bb5d",
-            "redirect_uri" : "http://3.34.3.84/account/kakao/account/kakao/callback/",
+            "redirect_uri" : "http://3.34.3.84/account/kakao/callback/",
             "code" : request.GET["code"]
         }
 

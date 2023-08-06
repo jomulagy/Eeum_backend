@@ -363,8 +363,9 @@ class EditDeleteView(APIView):
         except :
             return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
         
-        수정할 단어를 선택해서 변경해서 저장
-        """    def post(self, request):
+
+class CommentLikesView(APIView):
+    def post(self, request):
         comment_id = request.data["comment_id"]
         comment= Comment.objects.get(id=comment_id)
 

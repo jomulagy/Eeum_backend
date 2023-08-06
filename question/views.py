@@ -76,3 +76,37 @@ class CommentCreatView(APIView):
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
 
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])      
+class QuestionLikeView(APIView):
+    
+    def post(self, request):
+        try:
+            entity = Question.objects.get(id = request.data["question_id"])
+            if Question_Likes.objects.filter(user = request.user, question = entity).exists():
+                like = Question_Likes.objects.get(user = request.user, question = entity)
+                like.delete()
+            else:
+                like = Question_Likes(user = request.user, question = entity)
+                like.save()
+
+        except (KeyError, ValueError):
+            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])      
+class CommentLikeView(APIView):
+    
+    def post(self, request):
+        try:
+            entity = Comment.objects.get(id = request.data["comment_id"])
+            if Comment_Likes.objects.filter(user = request.user, comment = entity).exists():
+                like = Comment_Likes.objects.get(user = request.user, comment = entity)
+                like.delete()
+            else:
+                like = Comment_Likes(user = request.user, comment = entity)
+                like.save()
+                
+        except (KeyError, ValueError):
+            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+

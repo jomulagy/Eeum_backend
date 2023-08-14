@@ -27,16 +27,8 @@ class KaKaoView(View):
 @permission_classes((AllowAny,))
 class KaKaoCallBackView(APIView):
     def get(self, request):
-        data = {
-            "grant_type": "authorization_code",
-            "client_id": "86a527ceaedd9951ed011a5f0011bb5d",
-            "redirect_uri" : "http://3.34.3.84/account/kakao/callback/",
-            "code" : request.GET["code"]
-        }
 
-        kakao_token_api = "https://kauth.kakao.com/oauth/token"
-
-        ACCESS_TOKEN = requests.post(kakao_token_api,data = data).json()["access_token"]
+        ACCESS_TOKEN = request.data["accessToken"]
 
         kakao_user_api = "https://kapi.kakao.com/v2/user/me"
         headers = {

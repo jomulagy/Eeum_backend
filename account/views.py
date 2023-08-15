@@ -35,7 +35,7 @@ class KaKaoCallBackView(APIView):
                 'access': str(refresh.access_token),
                 'refresh': str(refresh)
         }).data)
-        return Response({
+        return Response(data = {
                 'access': str(refresh.access_token),
                 'refresh': str(refresh)
         })

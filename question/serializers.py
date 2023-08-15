@@ -12,7 +12,10 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = ["id","nickname", "image"]
     
     def get_image(self, obj):
-        return getattr(settings,"HOST")+obj.image.url
+        if obj.image:
+            return getattr(settings,"HOST")+obj.image.url
+        else:
+            return None
 
 
 class QuestionSerializer(serializers.ModelSerializer):

@@ -13,7 +13,7 @@ class UserSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
     class Meta:
         model = User
-        fields = ["age","nickname","image","level","point"]
+        fields = ["id","age","nickname","image","level","point"]
 
     def get_image(self,obj):
         if obj.image:

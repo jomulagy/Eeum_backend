@@ -107,7 +107,10 @@ class AuthorSerializer(serializers.ModelSerializer):
         fields = ["id","nickname", "image"]
 
     def get_image(self, obj):
-        return settings.HOST + obj.image.url
+        if obj.image:
+            return settings.HOST + obj.image.url
+        else:
+            return None
 
 
 class EditSerializer(serializers.ModelSerializer):

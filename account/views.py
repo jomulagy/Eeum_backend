@@ -64,14 +64,11 @@ class UserInfo(APIView):
         return Response(serializer.data)
 
     def put(self,request):
-        serializer = UserCreateSerializer(request.user, data=request.data, partial=True)
-        if serializer.is_valid():
-            user = serializer.save()
-            user.image = request.FILES.get("image")
-            user.save()
-            resp = UserSerializer(request.user).data
-            return Response(resp, status=200)
-        return Response(serializer.errors, status=400)
+        user = request.user
+        user.nickname = request.data["nickname"]
+        user.save()
+        resp = UserSerializer(request.user).data
+        return Response(resp, status=200)
 
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])

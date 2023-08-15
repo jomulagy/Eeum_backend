@@ -1,7 +1,9 @@
+from PIL import Image
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 import random
 from message.models import Message
+import os
 
 class User(AbstractUser):
     age = models.IntegerField()
@@ -13,10 +15,28 @@ class User(AbstractUser):
     prefix = ["귀여운","멋있는","세련된","용감한","소심한","까다로운","잘생긴","못생긴","똑똑한","엉뚱한"]
     subfix = ["원숭이","코끼리","강아지","고양이","거북이","호랑이","햄스터","지렁이","달팽이","토끼","팬더"]
 
+    def set_image(self,folder_name):
+        current_directory = os.getcwd()  # 현재 디렉토리의 경로
+        parent_directory = os.path.dirname(current_directory)
+        folder_name = "강아지"  # 찾을 폴더의 이름
+        search_path = os.path.join(parent_directory,"media\\profile")  # 검색을 시작할 경로
+        for dirs in os.listdir(search_path):
+            if dirs == folder_name:
+                found_folder_path = os.path.join(search_path, folder_name)
+                break
+            else:
+                found_folder_path = None
+        random_choice = random.choice([0, 1])
+
+        image_path = os.listdir(found_folder_path)[random_choice]
+        image = Image.open(image_path)
+        self.image = image
+        self.save()
+
     def set_nickname(self):
         random_prefix = random.choice(self.prefix)
         random_subfix = random.choice(self.subfix)
-
+        self.set_image(random_subfix)
         self.nickname = random_prefix + " " + random_subfix
         self.save()
 

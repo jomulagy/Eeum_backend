@@ -35,6 +35,7 @@ class User(AbstractUser):
         self.save()
 
     def set_nickname(self):
+        print(1)
         random_prefix = random.choice(self.prefix)
         random_subfix = random.choice(self.subfix)
         self.set_image(random_subfix)

@@ -18,7 +18,7 @@ from search.serializers import WordSerializer
 @permission_classes((AllowAny,))
 class KaKaoCallBackView(APIView):
     def post(self, request):
-
+        print(request.data)
         username = str(request.data["id"])
         age = int(request.data["age"][:2])
 

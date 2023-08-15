@@ -10,7 +10,7 @@ class Word(models.Model):
     age = models.ManyToManyField(Age)
     mean = models.CharField(max_length=40)
     content = models.TextField(max_length=300, default='')
-    image = models.ImageField(upload_to="", null=True)
+    image = models.ImageField(upload_to="word", null=True)
     likes = models.ManyToManyField("account.User",related_name = "like_word")
     def get_likes(self):
         return self.likes.all().count()

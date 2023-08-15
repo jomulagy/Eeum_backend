@@ -101,7 +101,7 @@ class WordRecentView(APIView):
 class WordDetailView(APIView):
     "detail/"
 
-    def get(self, request):
+    def post(self, request):
         """단어/ 상세"""
 
         word_id=request.data["word_id"]

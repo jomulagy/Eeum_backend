@@ -43,6 +43,7 @@ class KaKaoCallBackView(APIView):
 @permission_classes((AllowAny,))
 class RefreshAccessToken(APIView):
     def post(self,request):
+        print(request.data)
         refresh_token = request.data["refresh"]
         if not refresh_token:
             return Response({'error': 'Refresh 토큰이 필요합니다'}, status=401)

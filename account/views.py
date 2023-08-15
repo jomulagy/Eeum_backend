@@ -31,7 +31,10 @@ class KaKaoCallBackView(APIView):
         user.save()
 
         refresh = RefreshToken.for_user(user)
-
+        print(Response({
+                'access': str(refresh.access_token),
+                'refresh': str(refresh)
+        }))
         return Response({
                 'access': str(refresh.access_token),
                 'refresh': str(refresh)

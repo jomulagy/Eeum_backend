@@ -16,19 +16,10 @@ from .serializers import UserSerializer, EditEasySerializer, UserCreateSerialize
 from search.serializers import WordSerializer
 
 @permission_classes((AllowAny,))
-class KaKaoView(View):
-    def get(self, request):
-        kakao_api = "https://kauth.kakao.com/oauth/authorize?response_type=code&client_id="
-        redirect_uri = "http://3.34.3.84/account/kakao/callback/"
-        client_id = "86a527ceaedd9951ed011a5f0011bb5d"
-
-        return redirect(f"{kakao_api}{client_id}&redirect_uri={redirect_uri}")
-
-@permission_classes((AllowAny,))
 class KaKaoCallBackView(APIView):
     def post(self, request):
 
-        username = request.data["id"]
+        username = str(request.data["id"])
         age = int(request.data["age"][:2])
 
         try:

@@ -66,6 +66,10 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_MAX_LIFETIME': timedelta(days=7),  # Refresh 토큰 최대 유효 기간 설정 (예: 7일)
 }
 
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5501",  # 클라이언트의 주소
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',

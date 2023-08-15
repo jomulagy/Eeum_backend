@@ -28,7 +28,7 @@ class User(AbstractUser):
                 found_folder_path = None
         random_choice = random.choice([0, 1])
 
-        image_path = os.listdir(found_folder_path)[random_choice]
+        image_path = os.path.join(search_path,os.listdir(found_folder_path)[random_choice])
         image = Image.open(image_path)
         print(image)
         self.image = image

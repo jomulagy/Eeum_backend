@@ -420,7 +420,7 @@ class CommentCreateView(APIView):
             message = Message(user = edit.author)
             message.create_answer(edit.title)
             message.save()
-            likes = edit.likes.objects.all()
+            likes = edit.likes.all()
             for like in likes:
                 message = Message(user=like.user)
                 message.get_answer(edit.title)

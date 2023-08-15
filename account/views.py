@@ -26,7 +26,7 @@ class KaKaoView(View):
 
 @permission_classes((AllowAny,))
 class KaKaoCallBackView(APIView):
-    def get(self, request):
+    def post(self, request):
 
         username = request.data["id"]
         age = int(request.data["age"][:2])

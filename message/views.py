@@ -13,7 +13,6 @@ from .serializers import MessageSerializer
 class MessageList(APIView):
     def get(self,request):
         user = request.user
-        # user = User.objects.get(id = 1)
         messages = Message.objects.filter(user = user)
         response = MessageSerializer(messages,many = True).data
         return Response(response)

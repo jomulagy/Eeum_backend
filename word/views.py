@@ -134,8 +134,8 @@ class WordCreateView(APIView):
             word.author = request.user
             for age in request.POST.getlist('age'):
                 word.age.add(Age.objects.get(value=int(age)))
-            word.image = request.FILES["image"]
-            print(request.FILES)
+            if request.FILES["image"]:
+                word.image = request.FILES["image"]
             word.save()
             request.user.set_point(50)
             if Question.objects.filter(type = "등록요청",title = word.title).exists():

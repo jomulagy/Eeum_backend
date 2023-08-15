@@ -32,7 +32,7 @@ class QuestionCreateView(APIView):
 
     def post(self, request):
         """질문/생성"""
-
+        print(request.data)
         serializer = QuestionCreateSerializer(data=request.data)
         if serializer.is_valid():
             entity = serializer.save()

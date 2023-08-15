@@ -28,17 +28,8 @@ class KaKaoView(View):
 class KaKaoCallBackView(APIView):
     def get(self, request):
 
-        ACCESS_TOKEN = request.data["accessToken"]
-
-        kakao_user_api = "https://kapi.kakao.com/v2/user/me"
-        headers = {
-            "Authorization":f"Bearer ${ACCESS_TOKEN}",
-            "Content-type" : "application/x-www-form-urlencoded;charset=utf-8"
-        }
-        user_info = requests.get(kakao_user_api,headers = headers).json()
-
-        username = user_info["id"]
-        age = int(user_info["kakao_account"]["age_range"][:2])
+        username = request.data["id"]
+        age = int(request.data["age"][:2])
 
         try:
             user = User.objects.get(username = username)

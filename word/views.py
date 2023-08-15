@@ -105,7 +105,7 @@ class WordDetailView(APIView):
         """단어/ 상세"""
 
         word_id=request.data["word_id"]
-        word= Word.objects.get(pk=word_id)
+        word= Word.objects.get(pk=int(word_id))
         word.views+=1 # 조회수 증가
         word.save()
         # print(WordSerializer(word).data)

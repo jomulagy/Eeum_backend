@@ -23,7 +23,7 @@ class QuestionListView(APIView):
         if request.data["sort"] == "최신":
             entity = entity.order_by("-created_at")
         else:
-            entity = entity.order_by("-view")
+            entity = entity.order_by("-views")
         resp = QuestionSerializer(entity, many=True).data
         return Response(resp)
 

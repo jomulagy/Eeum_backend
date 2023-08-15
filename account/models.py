@@ -18,7 +18,6 @@ class User(AbstractUser):
     def set_image(self,folder_name):
         current_directory = os.getcwd()  # 현재 디렉토리의 경로
 
-        folder_name = "강아지"  # 찾을 폴더의 이름
         search_path = os.path.join(current_directory,"media\\profile")  # 검색을 시작할 경로
         # search_path = os.path.join(parent_directory,"Eeum_backend/media/profile")  # 검색을 시작할 경로
         for dirs in os.listdir(search_path):

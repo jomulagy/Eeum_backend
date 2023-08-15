@@ -137,7 +137,7 @@ class WordCreateView(APIView):
             word.author = request.user
             print(word.author)
             for age in request.POST.getlist('age'):
-                word.age.add(Age.objects.get(value=int(age)))
+                word.age.add(Age.objects.get(value=age))
             if "image" in request.FILES:
                 word.image = request.FILES["image"]
             word.save()

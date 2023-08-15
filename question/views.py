@@ -32,25 +32,25 @@ class QuestionCreateView(APIView):
 
     def post(self, request):
         """질문/생성"""
-        try:
-            serializer = QuestionCreateSerializer(data=request.data)
-            if serializer.is_valid():
-                entity = serializer.save()
-                entity.author = request.user
-                if entity.type == "질문":
-                    word = Word.objects.get(id=request.data["word_id"])
-                    entity.word = word
-                    message = Message(user = word.author)
-                    message.get_question(word.title)
-                    message.save()
-                else:
-                    entity.word = None
-                entity.save()
 
-                return Response(QuestionSerializer(entity).data)
-            
-        except (KeyError, ValueError):
-            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+        serializer = QuestionCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            entity = serializer.save()
+            entity.author = request.user
+            if entity.type == "질문":
+                word = Word.objects.get(id=request.data["word_id"])
+                entity.word = word
+                message = Message(user = word.author)
+                message.get_question(word.title)
+                message.save()
+            else:
+                entity.word = None
+            entity.save()
+
+            return Response(QuestionSerializer(entity).data)
+        else:
+            return Response(status=400)
+
 
 @permission_classes((AllowAny,))   
 class QuestionDetailListView(APIView):

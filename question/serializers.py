@@ -93,7 +93,10 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
         return QuestionSerializer(obj).data
     
     def get_word(self,obj):
-        return WordSerializer(obj.word).data
+        if obj.word:
+            return WordSerializer(obj.word).data
+        else:
+            return None
     
     def get_comments(self,obj):
         return CommentSerializer(obj.comment_set.all(), many=True).data

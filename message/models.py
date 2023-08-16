@@ -16,10 +16,14 @@ class Message(models.Model):
 
     def update_level(self, grade):
         self.content = f"{self.user.nickname}님의 등급이 {grade}으로 조정되었습니다."
+        self.type = "포인트"
+        self.target_id = None
         self.save()
 
-    def get_edit(self, word):
-        self.content = f"{word}에 대한 수정 요청이 등록되었습니다."
+    def get_edit(self, obj):
+        self.content = f"{obj.word.title}에 대한 수정 요청이 등록되었습니다."
+        self.type = "수정요청"
+        self.target_id = obj.id
         self.save()
 
     def get_question(self, word):
@@ -28,10 +32,14 @@ class Message(models.Model):
 
     def grade_imminent(self, grade):
         self.content = f"{grade}까지 10포인트 남았습니다."
+        self.type = "포인트"
+        self.target_id = None
         self.save()
 
     def get_point(self,point):
-        self.content = f"{self.user.nickname} 님 {point} 포인트 획득하셨습니다!🔥 (현재 포인트 : {self.user.point}포인트)"
+        self.content = f"{self.user.nickname} 님 {point} 포인트 획득하셨습니다!&#x1F525; (현재 포인트 : {self.user.point}포인트)"
+        self.type = "포인트"
+        self.target_id = None
         self.save()
 
     def get_answer(self):

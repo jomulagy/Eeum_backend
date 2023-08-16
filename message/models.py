@@ -5,9 +5,13 @@ class Message(models.Model):
     read = models.BooleanField(default=False)
     user = models.ForeignKey("account.User",on_delete=models.CASCADE, related_name="messages")
     created_at = models.DateTimeField(auto_now_add=True)
+    type = models.CharField(max_length = 100)
+    target_id = models.IntegerField(null = True)
 
-    def create_answer(self, question):
-        self.content = f"{question}에 대한 답변이 등록되었습니다."
+    def create_answer(self, obj, comment):
+        self.content = f"{obj.title}에 대한 답변이 등록되었습니다."
+        self.type = "댓글"
+        self.target_id = comment.id
         self.save()
 
     def update_level(self, grade):

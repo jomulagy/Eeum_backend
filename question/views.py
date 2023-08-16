@@ -45,8 +45,7 @@ class QuestionCreateView(APIView):
                 message.get_question(word.title)
                 message.save()
             else:
-                entity.word = None
-            entity.save()
+                entity.save()
 
             return Response(QuestionSerializer(entity).data)
         else:
@@ -83,7 +82,7 @@ class CommentCreatView(APIView):
                 request.user.set_point(25)
 
                 message = Message(user = question.author)
-                message.create_answer(question.title)
+                message.create_answer(question,entity)
                 message.save()
 
                 likes = Question_Likes.objects.filter(question = question)

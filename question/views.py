@@ -38,6 +38,7 @@ class QuestionCreateView(APIView):
         if serializer.is_valid():
             entity = serializer.save()
             entity.author = request.user
+            entity.save()
             if entity.type == "질문":
                 word = Word.objects.get(id=request.data["word_id"])
                 entity.word = word

@@ -7,7 +7,9 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from question.serializers import QuestionSerializer
 from word.models import Edit
+from word.serializers import EditSerializer
 from .models import User
 
 import requests
@@ -80,7 +82,19 @@ class UserWord(APIView):
 
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])
-class UserQuestionList(APIView):
+class UserWordList(APIView):
+    def get(self,request):
+        words = request.user.word_set.all().order_by("-created_at")
+        words = WordSerializer(words,many = True).data
+        response = {
+            "user" : request.user.nickname,
+            "words" : words
+        }
+        return Response(response)
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class UserQuestion(APIView):
     def get(self,request):
         questions = request.user.question_set.all().order_by("-created_at")
         response = QuestionEasySerializer(questions,many = True).data
@@ -88,8 +102,32 @@ class UserQuestionList(APIView):
 
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])
-class EditList(APIView):
+class UserQuestionList(APIView):
+    def get(self,request):
+        questions = request.user.question_set.all().order_by("-created_at")
+        questions = QuestionSerializer(questions,many = True).data
+        data = {
+            "user" : request.user.nickname,
+            "questions" : questions
+        }
+        return Response(data)
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class UserEdit(APIView):
     def get(self,request):
         edits = Edit.objects.filter(author = request.user).order_by("created_at")
         response = EditEasySerializer(edits,many = True).data
+        return Response(response)
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
+class UserEditList(APIView):
+    def get(self,request):
+        edits = Edit.objects.filter(author = request.user).order_by("created_at")
+        edits = EditSerializer(edits,many = True).data
+        response = {
+            "user" : request.user.nickname,
+            "edits" : edits
+        }
         return Response(response)

@@ -24,12 +24,14 @@ class Vocablulary(APIView):
 
     def post(self,request):
         id = request.data.get("id")
-        if Vocabulary.objects.filter(id = id).exists():
-            return Response({"error" : "이미 존재하는 단어 입니다."},status=400)
-
-        vocabulary = Vocabulary(user = request.user,word = Word.objects.get(id = id))
-        vocabulary.save()
-        return Response(status=200)
+        if Vocabulary.objects.filter(user = request.user,word__id = id).exists():
+            vocabulary = Vocabulary.objects.filter(word__id = id)
+            vocabulary.delete()
+            return Response({"message" : "단어장에서 삭제되었습니다"},status=200)
+        else:
+            vocabulary = Vocabulary(user = request.user,word = Word.objects.get(id = id))
+            vocabulary.save()
+            return Response({"message" : "단어장에 추가되었습니다"},status=200)
 
     def delete(self,request):
         ids = request.data.get("ids")

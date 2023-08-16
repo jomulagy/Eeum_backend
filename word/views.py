@@ -114,7 +114,7 @@ class WordDetailView(APIView):
         word.save()
         # print(WordSerializer(word).data)
 
-        return Response(WordSerializer(word).data)
+        return Response(WordSerializer(word, context={'request': request}).data)
 
 
 

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db.models import Count
 
 from question.models import Question
+from vocabulary.models import Vocabulary
 from word.models import * 
 from account.models import User
 
@@ -45,9 +46,11 @@ class WordSerializer(serializers.ModelSerializer):
     edits= serializers.SerializerMethodField()
     my_words= serializers.SerializerMethodField()
     like_ages = serializers.SerializerMethodField()
+    is_likes = serializers.SerializerMethodField()
+    is_vocabulary = serializers.SerializerMethodField()
     class Meta:
         model = Word
-        fields = ["id","title","mean", "content","age","likes", "views","created_at","image","author","edits","questions","my_words","like_ages"]
+        fields = ["id","title","mean", "content","age","likes", "views","created_at","image","author","edits","questions","my_words","like_ages","is_likes","is_vocabulary"]
 
 
     def get_age(self, obj):
@@ -84,6 +87,20 @@ class WordSerializer(serializers.ModelSerializer):
             if str(age['age']) in data:
                 data[str(age['age'])] = age['count']
         return data
+    def get_is_likes(self,obj):
+        request = self.context.get('request')
+        if request.user.is_authenticated and obj.likes.filter(id = request.user.id).exists():
+            return True
+        else:
+            return False
+
+    def get_is_vocabulary(self,obj):
+        request = self.context.get('request')
+        print(request.user)
+        if request.user.is_authenticated and Vocabulary.objects.filter(user = request.user,word = obj).exists():
+            return True
+        else:
+            return False
 
 class WordEasySerializer(serializers.ModelSerializer):
     age= serializers.SerializerMethodField()

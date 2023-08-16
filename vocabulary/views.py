@@ -33,13 +33,6 @@ class Vocablulary(APIView):
             vocabulary.save()
             return Response({"message" : "단어장에 추가되었습니다"},status=200)
 
-    def delete(self,request):
-        ids = request.data.get("ids")
-        vocabularys = Vocabulary.objects.filter(word__id__in = ids)
-        for vocabulary in vocabularys:
-            vocabulary.delete()
-
-        return Response(status=200)
 
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])

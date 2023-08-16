@@ -12,11 +12,13 @@ class Word(models.Model):
     content = models.TextField(max_length=300, default='')
     image = models.ImageField(upload_to="word", null=True)
     likes = models.ManyToManyField("account.User",related_name = "like_word")
-    def get_likes(self):
-        return self.likes.all().count()
+
     created_at = models.DateTimeField(auto_now_add = True, blank=True)
     views= models.IntegerField(default=0)
     best = models.BooleanField(default=False)
+
+    def get_likes(self):
+        return self.likes.all().count()
 
 
 class Edit(models.Model):

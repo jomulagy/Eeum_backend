@@ -35,7 +35,9 @@ class WordLikesView(APIView):
         else:
             word.likes.add(request.user)
             word.save()
-        return Response(word.likes.all().count())
+        return Response({
+            "likes":word.likes.all().count()
+        })
 
 
 @permission_classes((AllowAny,))

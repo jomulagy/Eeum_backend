@@ -50,8 +50,8 @@ class Message(models.Model):
         self.target_id = obj.id
         self.save()
 
-    def create_word(self,edit):
-        self.content = f"“등록요청한 단어 {edit.word.title}가 등록되었습니다."
-        self.type = "등록 요청"
-        self.target_id = edit.id
+    def create_word(self,word):
+        self.content = f"“등록요청한 단어 {word.title}가 등록되었습니다."
+        self.type = "단어"
+        self.target_id = word.id
         self.save()

@@ -142,12 +142,12 @@ class WordCreateView(APIView):
                 word.image = request.FILES["image"]
             word.save()
             request.user.set_point(50)
-            if Question.objects.filter(type = "등록요청",title = word.title).exists():
-                question = Question.objects.get(type = "등록요청",title = word.title)
+            if Question.objects.filter(type = "등록 요청",title = word.title).exists():
+                question = Question.objects.get(type = "등록 요청",title = word.title)
                 question.word = word
                 question.save()
                 message = Message(user = question.author)
-                message.create_word(word.title)
+                message.create_word(word)
                 message.save()
                 for like in Question_Likes.objects.filter(question = question):
                     message = Message(user = like.author)

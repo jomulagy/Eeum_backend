@@ -6,7 +6,7 @@ class MessageSerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
     class Meta:
         model = Message
-        fields = ["id","created_at","read","content"]
+        fields = ["id","created_at","read","content","type","target_id"]
 
     def get_created_at(self,obj):
         now = timezone.now()

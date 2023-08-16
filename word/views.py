@@ -190,7 +190,8 @@ class WordUpdateView(APIView): #UpdateAPIView
                 word.age.add(Age.objects.get(value=int(age)))
             word.mean = request.POST.get('mean', word.mean)
             word.content = request.POST.get('content', word.content)
-            word.image = request.FILES["image"]
+            if request.FILES:
+                word.image = request.FILES["image"]
             word.save()
             request.user.set_point(50)
 

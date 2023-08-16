@@ -29,7 +29,7 @@ class WordLikesView(APIView):
         word_id = request.data["word_id"]
         word= Word.objects.get(id=word_id)
 
-        if Word.objects.filter(id=word_id, likes=request.user).exists():
+        if Word.objects.filter(id=word_id, likes__in=request.user).exists():
             word.likes.remove(request.user)
             word.save()
         else:

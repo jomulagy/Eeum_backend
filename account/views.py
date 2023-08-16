@@ -74,7 +74,7 @@ class UserInfo(APIView):
 @authentication_classes([JWTAuthentication])
 class UserWord(APIView):
     def get(self,request):
-        words = request.user.word_set.all()
+        words = request.user.word_set.all().order_by("-created_at")
         response = WordSerializer(words,many = True).data
         return Response(response)
 

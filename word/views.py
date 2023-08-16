@@ -162,7 +162,7 @@ class WordCreateView(APIView):
                 status=HTTPStatus.OK,
                 data={
                     "data": {
-                        "word":WordSerializer(word).data
+                        "word":WordSerializer(word, context={'request': request}).data
                     }
                 }
             )
@@ -198,7 +198,7 @@ class WordUpdateView(APIView): #UpdateAPIView
                 status=HTTPStatus.OK,
                 data={
                     "data": {
-                        "word": WordSerializer(word).data
+                        "word": WordSerializer(word, context={'request': request}).data
                     },
                     "message": "단어가 수정되었습니다.",
                 },

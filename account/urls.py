@@ -8,7 +8,7 @@ urlpatterns = [
 
     path("user/",UserInfo.as_view()),
     path("user/word/",UserWord.as_view()),
-    path("user/question/",UserWord.as_view()),
+    path("user/question/",UserQuestionList.as_view()),
     path("user/edit/",EditList.as_view()),
 
 ]

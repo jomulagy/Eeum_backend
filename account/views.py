@@ -12,7 +12,7 @@ from .models import User
 
 import requests
 
-from .serializers import UserSerializer, EditEasySerializer, UserCreateSerializer
+from .serializers import UserSerializer, EditEasySerializer, UserCreateSerializer, QuestionEasySerializer
 from search.serializers import WordSerializer
 
 @permission_classes((AllowAny,))
@@ -83,7 +83,7 @@ class UserWord(APIView):
 class UserQuestionList(APIView):
     def get(self,request):
         questions = request.user.question_set.all().order_by("-created_at")
-        response = WordSerializer(questions,many = True).data
+        response = QuestionEasySerializer(questions,many = True).data
         return Response(response)
 
 @permission_classes((IsAuthenticated,))

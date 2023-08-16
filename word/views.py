@@ -182,6 +182,7 @@ class WordUpdateView(APIView): #UpdateAPIView
     "/update/<int:word_id>"
     def put(self, request, **kwargs):
         """단어/수정"""
+        print(request.POST)
         word_id = kwargs["word_id"]
         word = get_object_or_404(Word, pk=word_id)
         if word.author == request.user:

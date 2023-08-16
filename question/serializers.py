@@ -90,11 +90,11 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
         fields = ["id","question", "word", "comments"]
     
     def get_question(self,obj):
-        print(QuestionSerializer(obj).data)
         return QuestionSerializer(obj).data
     
     def get_word(self,obj):
         if obj.word:
+            print("word :",WordSerializer(obj.word).data)
             return WordSerializer(obj.word).data
         else:
             return None

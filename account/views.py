@@ -80,6 +80,14 @@ class UserWord(APIView):
 
 @permission_classes((IsAuthenticated,))
 @authentication_classes([JWTAuthentication])
+class UserQuestionList(APIView):
+    def get(self,request):
+        questions = request.user.question_set.all().order_by("-created_at")
+        response = WordSerializer(questions,many = True).data
+        return Response(response)
+
+@permission_classes((IsAuthenticated,))
+@authentication_classes([JWTAuthentication])
 class EditList(APIView):
     def get(self,request):
         edits = Edit.objects.filter(author = request.user).order_by("created_at")

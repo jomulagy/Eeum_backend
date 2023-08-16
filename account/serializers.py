@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.conf import settings
 
+from question.models import Question
 from word.models import Edit
 from .models import User
 
@@ -29,3 +30,13 @@ class EditEasySerializer(serializers.ModelSerializer):
 
     def get_created_at(self,obj):
         return obj.created_at.strftime("%Y/%m/%d %H:%M")
+
+class QuestionEasySerializer(serializers.ModelSerializer):
+    created_at = serializers.SerializerMethodField()
+    class Meta:
+        model = Question
+        fields = ["title","created_at"]
+
+    def get_created_at(self,obj):
+        return obj.created_at.strftime("%Y/%m/%d %H:%M")
+

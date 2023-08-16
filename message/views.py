@@ -17,6 +17,11 @@ class MessageList(APIView):
         response = MessageSerializer(messages,many = True).data
         return Response(response)
 
+    def post(self,request):
+        message = Message.objects.get(id = request.data["id"])
+        message.read = True
+        return Response(status = 200,data ={"message":"success"})
+
     def delete(self,request):
         user = request.user
         # user = User.objects.get(id = 1)

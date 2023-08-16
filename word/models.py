@@ -22,6 +22,7 @@ class Word(models.Model):
 class Edit(models.Model):
     word = models.ForeignKey("word.Word", on_delete=models.CASCADE, null=True)
     title = models.CharField(max_length=100)
+    type = models.CharField(max_length=100,default="수정 요청")
     content = models.TextField(max_length=300)
     author = models.ForeignKey("account.User", on_delete=models.CASCADE, null=True)
     created_at = models.DateTimeField(auto_now_add=True, blank=True)

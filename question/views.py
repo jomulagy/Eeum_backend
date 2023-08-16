@@ -41,8 +41,9 @@ class QuestionCreateView(APIView):
             if entity.type == "질문":
                 word = Word.objects.get(id=request.data["word_id"])
                 entity.word = word
+                entity.save()
                 message = Message(user = word.author)
-                message.get_question(word.title)
+                message.get_question(entity)
                 message.save()
             else:
                 entity.save()
@@ -88,7 +89,7 @@ class CommentCreatView(APIView):
                 likes = Question_Likes.objects.filter(question = question)
                 for like in likes:
                     message = Message(user = like.user)
-                    message.get_answer(question.title)
+                    message.get_answer(question)
                     message.save()
                 return Response(CommentSerializer(entity).data)
             

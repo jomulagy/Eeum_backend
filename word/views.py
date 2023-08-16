@@ -151,7 +151,7 @@ class WordCreateView(APIView):
                 message.save()
                 for like in Question_Likes.objects.filter(question = question):
                     message = Message(user = like.author)
-                    message.create_word(word.title)
+                    message.create_word(word)
                     message.save()
 
             return JsonResponse(
@@ -313,7 +313,7 @@ class EditCreateView(APIView):
             edit.author = request.user
             edit.save()
             message = Message(user = word.author)
-            message.get_edit(word.title)
+            message.get_edit(edit)
             message.save()
             return JsonResponse(
                 status= HTTPStatus.OK,
@@ -423,7 +423,7 @@ class CommentCreateView(APIView):
             likes = edit.likes.all()
             for like in likes:
                 message = Message(user=like.user)
-                message.get_answer(edit.title)
+                message.get_answer(edit)
                 message.save()
             return JsonResponse(
                 status= HTTPStatus.OK,

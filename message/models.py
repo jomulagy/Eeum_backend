@@ -10,7 +10,7 @@ class Message(models.Model):
 
     def create_answer(self, obj, comment):
         self.content = f"{obj.title}에 대한 답변이 등록되었습니다."
-        self.type = "댓글"
+        self.type = obj.type
         self.target_id = comment.id
         self.save()
 
@@ -22,12 +22,14 @@ class Message(models.Model):
 
     def get_edit(self, obj):
         self.content = f"{obj.word.title}에 대한 수정 요청이 등록되었습니다."
-        self.type = "수정요청"
+        self.type = "수정 요청"
         self.target_id = obj.id
         self.save()
 
-    def get_question(self, word):
-        self.content = f"{word}에 대한 질문이 등록되었습니다."
+    def get_question(self, obj):
+        self.content = f"{obj.word}에 대한 질문이 등록되었습니다."
+        self.type = "질문"
+        self.target_id = obj.id
         self.save()
 
     def grade_imminent(self, grade):
@@ -37,15 +39,19 @@ class Message(models.Model):
         self.save()
 
     def get_point(self,point):
-        self.content = f"{self.user.nickname} 님 {point} 포인트 획득하셨습니다!&#x1F525; (현재 포인트 : {self.user.point}포인트)"
+        self.content = f"{self.user.nickname}님 {point} 포인트 획득하셨습니다!&#x1F525; (현재 포인트 : {self.user.point}포인트)"
         self.type = "포인트"
         self.target_id = None
         self.save()
 
-    def get_answer(self):
+    def get_answer(self,obj):
         self.content = f"“나도 궁금해요” 표시한 게시글에 답변이 등록되었습니다"
+        self.type = obj.type
+        self.target_id = obj.id
         self.save()
 
-    def create_word(self,word):
-        self.content = f"“등록요청한 단어 {word}가 등록되었습니다."
+    def create_word(self,edit):
+        self.content = f"“등록요청한 단어 {edit.word.title}가 등록되었습니다."
+        self.type = "등록 요청"
+        self.target_id = edit.id
         self.save()

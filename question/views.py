@@ -61,7 +61,9 @@ class QuestionDetailListView(APIView):
         """질문 상세"""
         try: 
             entity = Question.objects.get(id = request.data["question_id"])
+            print(entity)
             resp = QuestionDetailSerializer(entity).data
+            print(resp)
             return Response(resp)
 
         except (KeyError, ValueError):

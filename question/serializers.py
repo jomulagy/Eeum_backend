@@ -76,7 +76,7 @@ class WordSerializer(serializers.ModelSerializer):
     
     def get_age(self,obj):
         ages = AgeSerializer(obj.age.all(), many=True).data
-        return [age["item"] for age in ages]
+        return [age["value"] for age in ages]
     
     def get_likes(self, obj):
         return obj.likes.all().count()
@@ -94,6 +94,7 @@ class QuestionDetailSerializer(serializers.ModelSerializer):
     
     def get_word(self,obj):
         if obj.word:
+            print("obj.word : ",obj.word)
             print("word :",WordSerializer(obj.word).data)
             return WordSerializer(obj.word).data
         else:

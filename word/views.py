@@ -182,30 +182,29 @@ class WordUpdateView(APIView): #UpdateAPIView
     "/update/<int:word_id>"
     def put(self, request, **kwargs):
         """단어/수정"""
-        try:
-            word_id = kwargs["word_id"]
-            word = get_object_or_404(Word, pk=word_id)
-            if word.author == request.user:
-                word.title = request.POST.get('title', word.title)
-                for age in request.POST.getlist("age"):
-                    word.age.add(Age.objects.get(value=int(age)))
-                word.mean = request.POST.get('mean', word.mean)
-                word.content = request.POST.get('content', word.content)
-                word.image = request.FILES["image"]
-                word.save()
-                request.user.set_point(50)
+        word_id = kwargs["word_id"]
+        word = get_object_or_404(Word, pk=word_id)
+        if word.author == request.user:
+            word.title = request.POST.get('title', word.title)
+            for age in request.POST.getlist("age"):
+                word.age.add(Age.objects.get(value=int(age)))
+            word.mean = request.POST.get('mean', word.mean)
+            word.content = request.POST.get('content', word.content)
+            word.image = request.FILES["image"]
+            word.save()
+            request.user.set_point(50)
 
-                return JsonResponse(
-                    status=HTTPStatus.OK,
-                    data={
-                        "data":{
-                            "word": WordSerializer(word).data
-                        },
-                        "message": "단어가 수정되었습니다.",
+            return JsonResponse(
+                status=HTTPStatus.OK,
+                data={
+                    "data": {
+                        "word": WordSerializer(word).data
                     },
-                )
-        except :
-            return JsonResponse(status=HTTPStatus.FORBIDDEN, data={"message": "권한이 없습니다."})
+                    "message": "단어가 수정되었습니다.",
+                },
+            )
+        else:
+            return Response(status = 401,data = {"error":"작성자만 수정할 수 있음"})
 
 
 

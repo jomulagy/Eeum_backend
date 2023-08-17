@@ -26,7 +26,7 @@ class EditEasySerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
     class Meta:
         model = Edit
-        fields = ["title","created_at"]
+        fields = ["id","title","created_at"]
 
     def get_created_at(self,obj):
         return obj.created_at.strftime("%Y/%m/%d %H:%M")
@@ -35,7 +35,7 @@ class QuestionEasySerializer(serializers.ModelSerializer):
     created_at = serializers.SerializerMethodField()
     class Meta:
         model = Question
-        fields = ["title","created_at"]
+        fields = ["id","title","created_at"]
 
     def get_created_at(self,obj):
         return obj.created_at.strftime("%Y/%m/%d %H:%M")

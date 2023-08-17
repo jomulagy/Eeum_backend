@@ -188,11 +188,9 @@ class WordUpdateView(APIView): #UpdateAPIView
         word = get_object_or_404(Word, pk=word_id)
         if word.author == request.user:
             word.title = request.POST.get('title')
-            for age in request.POST.getlist("age"):
-                word.age.add(Age.objects.get(value=int(age)))
             word.mean = request.POST.get('mean')
             word.content = request.POST.get('content')
-            if request.FILES["image"] != "undefined":
+            if "image" in request.FILES:
                 word.image = request.FILES["image"]
             word.save()
             request.user.set_point(50)

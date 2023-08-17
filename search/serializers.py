@@ -12,7 +12,7 @@ class WordSerializer(serializers.ModelSerializer):
     ages = serializers.SerializerMethodField()
     class Meta:
         model = Word
-        fields = ["id","title","ages","content","likes"]
+        fields = ["id","title","ages","mean","likes"]
 
     def get_likes(self,obj):
         return obj.likes.all().count()

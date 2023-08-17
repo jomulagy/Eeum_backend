@@ -7,6 +7,8 @@ from question.models import Question
 from question.serializers import QuestionSerializer
 from word.models import Word
 from rest_framework.response import Response
+
+from word.serializers import WordEasySerializer
 from .serializers import WordSerializer
 from django.db.models.functions import Length
 from django.db.models import Value
@@ -31,7 +33,7 @@ class SearchWord(APIView):
             }
         elif Word.objects.filter(title = keyword).exists():
             words = Word.objects.get(title = keyword)
-            word = WordSerializer(words).data
+            word = WordEasySerializer(words).data
             response = {
                 "is_exists" : True,
                 "word" : word

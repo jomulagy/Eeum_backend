@@ -25,7 +25,11 @@ class SearchWordList(APIView):
 class SearchWord(APIView):
     def post(self,request):
         keyword = request.data["keyword"]
-        if Word.objects.filter(title = keyword).exists():
+        if keyword == '':
+            response = {
+                "is_exists" : False
+            }
+        elif Word.objects.filter(title = keyword).exists():
             words = Word.objects.get(title = keyword)
             word = WordSerializer(words).data
             response = {

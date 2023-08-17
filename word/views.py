@@ -124,7 +124,7 @@ class WordCreateView(APIView):
     "/create"
 
     def post(self, request):
-        print(request.POST.get("age"))
+        print(request.POST.get("age").split(","))
         print(request.FILES)
         """단어/ 생성"""
         if Word.objects.filter(title = request.POST.get("title")).exists():
@@ -140,7 +140,7 @@ class WordCreateView(APIView):
             word = serializer.save()
             word.author = request.user
             print(word.author)
-            for age in request.POST.getlist('age'):
+            for age in request.POST.get("age").split(","):
                 print(age)
                 word.age.add(Age.objects.get(value=age))
             if "image" in request.FILES:

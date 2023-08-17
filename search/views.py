@@ -27,7 +27,7 @@ class SearchWord(APIView):
         keyword = request.data["keyword"]
         if keyword == '':
             response = {
-                "is_exists" : False
+                "is_exists" : True
             }
         elif Word.objects.filter(title = keyword).exists():
             words = Word.objects.get(title = keyword)

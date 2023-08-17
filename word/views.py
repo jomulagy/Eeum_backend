@@ -192,7 +192,7 @@ class WordUpdateView(APIView): #UpdateAPIView
                 word.age.add(Age.objects.get(value=int(age)))
             word.mean = request.POST.get('mean')
             word.content = request.POST.get('content')
-            if request.FILES["image"] == "undefined":
+            if request.FILES["image"] != "undefined":
                 word.image = request.FILES["image"]
             word.save()
             request.user.set_point(50)

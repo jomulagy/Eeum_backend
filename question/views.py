@@ -30,7 +30,7 @@ class QuestionListView(APIView):
             entity = entity.order_by("-views")
         questions = QuestionSerializer(entity, many=True).data
         resp = {
-            "word" : Word.objects.get(id = request.data["word_id"].title),
+            "word" : Word.objects.get(id = request.data["word_id"]).title,
             "questions" : questions,
 
         }

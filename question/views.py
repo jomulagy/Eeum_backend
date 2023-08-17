@@ -35,11 +35,9 @@ class QuestionListView(APIView):
                 "questions" : questions,
 
             }
-        else:
-            resp = {
-                "questions" : questions,
 
-            }
+        else:
+            resp = questions
 
         return Response(resp)
 

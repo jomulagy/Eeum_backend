@@ -187,7 +187,6 @@ class WordUpdateView(APIView): #UpdateAPIView
         word_id = kwargs["word_id"]
         word = get_object_or_404(Word, pk=word_id)
         if word.author == request.user:
-            word.title = request.POST.get('title')
             word.mean = request.POST.get('mean')
             word.content = request.POST.get('content')
             if "image" in request.FILES:

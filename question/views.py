@@ -19,7 +19,7 @@ class QuestionListView(APIView):
     def post(self, request):
         """전체 질문/조회"""
         print(request.data["sort"])
-        entity = Question.objects.filter(type = request.data["type"])
+        entity = Question.objects.filter(type = request.data["type"],word = Word.objects.get(id = request.data["word_id"]))
         if request.data["sort"] == "최신":
             entity = entity.order_by("-created_at")
         else:

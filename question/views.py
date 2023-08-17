@@ -29,11 +29,17 @@ class QuestionListView(APIView):
         else:
             entity = entity.order_by("-views")
         questions = QuestionSerializer(entity, many=True).data
-        resp = {
-            "word" : Word.objects.get(id = request.data["word_id"]).title,
-            "questions" : questions,
+        if "word_id" in request.data:
+            resp = {
+                "word" : Word.objects.get(id = request.data["word_id"]).title,
+                "questions" : questions,
 
-        }
+            }
+        else:
+            resp = {
+                "questions" : questions,
+
+            }
 
         return Response(resp)
 

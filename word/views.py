@@ -124,7 +124,7 @@ class WordCreateView(APIView):
     "/create"
 
     def post(self, request):
-        print(request.POST.age)
+        print(request.POST.get("age"))
         print(request.FILES)
         """단어/ 생성"""
         if Word.objects.filter(title = request.POST.get("title")).exists():

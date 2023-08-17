@@ -121,11 +121,11 @@ class QuestionLikeView(APIView):
             if Question_Likes.objects.filter(user = request.user, question = entity).exists():
                 like = Question_Likes.objects.get(user = request.user, question = entity)
                 like.delete()
-                return JsonResponse({'like': '0'})
+                return JsonResponse({'like': Question_Likes.objects.filter(question = entity).count()})
             else:
                 like = Question_Likes(user = request.user, question = entity)
                 like.save()
-                return JsonResponse({'like': '1'})
+                return JsonResponse({'like': Question_Likes.objects.filter(question = entity).count()})
 
         except (KeyError, ValueError):
             return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})

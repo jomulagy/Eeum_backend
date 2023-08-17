@@ -50,7 +50,7 @@ class CommentSerializer(serializers.ModelSerializer):
     likes = serializers.SerializerMethodField()
     class Meta:
         model = Question
-        fields = ["created_at", "author", "content", "likes"]
+        fields = ["id","created_at", "author", "content", "likes"]
     
     def get_author(self,obj):
         return AuthorSerializer(obj.author).data

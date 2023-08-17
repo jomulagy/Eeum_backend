@@ -232,14 +232,14 @@ class EditLikesView(APIView):
 class EditMostView(APIView):
     "edit/most_views/"
 
-    def get(self, request:HttpRequest) -> HttpResponse:
+    def post(self, request):
         """edit/조회수 조회
         
         조회수 많은 순
         """
 
         try:
-            edits = Edit.objects.all().order_by('-views')
+            edits = Edit.objects.filter(word = request.data["word_id"]).order_by('-views')
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
@@ -255,13 +255,13 @@ class EditMostView(APIView):
 class EditRecentView(APIView):
     "edit/recent/"
 
-    def get(self, request:HttpRequest) -> HttpResponse:
+    def post(self, request):
         """edit/기간별 조회
         
         최근 등록된 순
         """
         try:
-            edits = Edit.objects.all().order_by('-created_at')
+            edits = Edit.objects.filter(word = request.data["word_id"]).order_by('-created_at')
             return JsonResponse(
                 status= HTTPStatus.OK,
                 data={

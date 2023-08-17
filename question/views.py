@@ -28,7 +28,13 @@ class QuestionListView(APIView):
             entity = entity.order_by("-created_at")
         else:
             entity = entity.order_by("-views")
-        resp = QuestionSerializer(entity, many=True).data
+        questions = QuestionSerializer(entity, many=True).data
+        resp = {
+            "word" : Word.objects.get(id = request.data["word_id"].title),
+            "questions" : questions,
+
+        }
+
         return Response(resp)
 
 @permission_classes((IsAuthenticated,))

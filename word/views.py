@@ -307,6 +307,7 @@ class EditCreateView(APIView):
 
     def post(self, request):
         """Edit(수정요청) /생성"""
+        print(request.data)
         serializer= EditCreateSerializer(data=request.data)
         if serializer.is_valid():
             word_id= request.data["word_id"]   # edit.word.add(word) #pk가 word_id인 class word 가져와

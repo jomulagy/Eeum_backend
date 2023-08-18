@@ -19,7 +19,7 @@ class MessageList(APIView):
 
     def post(self,request):
         message = Message.objects.get(id = request.data["id"])
-        message.read = True
+        message.delete()
         return Response(status = 200,data ={"message":"success"})
 
     def delete(self,request):

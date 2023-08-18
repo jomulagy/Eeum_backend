@@ -13,7 +13,7 @@ from .serializers import MessageSerializer
 class MessageList(APIView):
     def get(self,request):
         user = request.user
-        messages = Message.objects.filter(user = user)
+        messages = Message.objects.filter(user = user).order_by("-created_at")
         response = MessageSerializer(messages,many = True).data
         return Response(response)
 

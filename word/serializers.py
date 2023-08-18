@@ -68,7 +68,7 @@ class WordSerializer(serializers.ModelSerializer):
     def get_author(self, obj):
         return WordAuthorSerializer(obj.author).data
     def get_questions(self, obj):
-        return QuestionsEasySerializer(obj.edit_set.all().order_by("-created_at"), many=True).data[:4]
+        return QuestionsEasySerializer(obj.question_set.all().order_by("-created_at"), many=True).data[:4]
     def get_edits(self, obj):
         return EditSerializer(obj.edit_set.all().order_by("-created_at"), many=True).data[:4]
     def get_my_words(self,obj):

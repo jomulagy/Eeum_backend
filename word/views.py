@@ -260,9 +260,9 @@ class EditRecentView(APIView):
         
         최근 등록된 순
         """
-        try:
-            edits = Edit.objects.filter(word = request.data["word_id"]).order_by('-created_at')
-            return JsonResponse(
+
+        edits = Edit.objects.filter(word = request.data["word_id"]).order_by('-created_at')
+        return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
                     "data":{
@@ -271,8 +271,7 @@ class EditRecentView(APIView):
                     },
                 },
             )
-        except (KeyError, ValueError):
-            return JsonResponse(status= HTTPStatus.BAD_REQUEST, data={})
+
 
 @permission_classes((AllowAny,))
 class EditDetailView(APIView):

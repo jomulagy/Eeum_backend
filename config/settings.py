@@ -67,9 +67,9 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5501",  "http://127.0.0.1:5500",# 클라이언트의 주소
+    "http://127.0.0.1:5501",  "http://127.0.0.1:5500","http://3.34.3.84"# 클라이언트의 주소
 ]
-CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:5501","http://127.0.0.1:5500",]
+CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:5501","http://127.0.0.1:5500","http://3.34.3.84"]
 CORS_ALLOW_CREDENTIALS = True
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

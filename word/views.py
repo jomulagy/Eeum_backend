@@ -266,6 +266,7 @@ class EditRecentView(APIView):
                 status= HTTPStatus.OK,
                 data={
                     "data":{
+                        "word" : Word.objects.get(id = "word_id").nickname,
                         "edit": EditSerializer(edits, many=True).data
                     },
                 },

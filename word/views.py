@@ -267,7 +267,7 @@ class EditRecentView(APIView):
                 status= HTTPStatus.OK,
                 data={
                     "data":{
-                        "word" : word.nickname,
+                        "word" : word.title,
                         "edit": EditSerializer(edits, many=True).data
                     },
                 },

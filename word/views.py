@@ -261,12 +261,13 @@ class EditRecentView(APIView):
         최근 등록된 순
         """
         print(request.data)
-        edits = Edit.objects.filter(word = int(request.data["word_id"])).order_by('-created_at')
+        word = Word.objects.get(id = int(request.data["word_id"]))
+        edits = Edit.objects.filter(word = word).order_by('-created_at')
         return JsonResponse(
                 status= HTTPStatus.OK,
                 data={
                     "data":{
-                        "word" : Word.objects.get(id = "word_id").nickname,
+                        "word" : word.nickname,
                         "edit": EditSerializer(edits, many=True).data
                     },
                 },

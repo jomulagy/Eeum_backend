@@ -13,7 +13,7 @@ class User(AbstractUser):
     image = models.ImageField(upload_to='user',null = True)
 
     prefix = ["귀여운","멋있는","세련된","용감한","소심한","까다로운","잘생긴","못생긴","똑똑한","엉뚱한"]
-    subfix = ["원숭이","코끼리","강아지","고양이","거북이","호랑이","햄스터","지렁이","달팽이","토끼","팬더"]
+    subfix = ["원숭이","코끼리","강아지","거북이","호랑이","햄스터","지렁이","달팽이","토끼","팬더"]
 
     def set_image(self,folder_name):
         current_directory = os.getcwd()  # 현재 디렉토리의 경로

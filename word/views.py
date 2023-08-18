@@ -260,7 +260,7 @@ class EditRecentView(APIView):
         
         최근 등록된 순
         """
-
+        print(request.data)
         edits = Edit.objects.filter(word = request.data["word_id"]).order_by('-created_at')
         return JsonResponse(
                 status= HTTPStatus.OK,

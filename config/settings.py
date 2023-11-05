@@ -15,7 +15,6 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-HOST = "http://127.0.0.1:8000/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -28,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
-HOST ="http://3.34.3.84"
+HOST ="http://13.125.238.175"
 
 # Application definition
 
@@ -67,9 +66,9 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5501",  "http://127.0.0.1:5500","http://3.34.3.84"# 클라이언트의 주소
+    "http://127.0.0.1:5501",  "http://127.0.0.1:5500","http://13.125.238.175"# 클라이언트의 주소
 ]
-CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:5501","http://127.0.0.1:5500","http://3.34.3.84"]
+CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:5501","http://127.0.0.1:5500","http://13.125.238.175"]
 CORS_ALLOW_CREDENTIALS = True
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -108,12 +107,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'eeum',
-        'USER': 'admin',
-        'PASSWORD': 'kjh980309',
-        'HOST': 'eeum.cloa3ma1uwfb.ap-northeast-2.rds.amazonaws.com',
-        'PORT': '3308',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
